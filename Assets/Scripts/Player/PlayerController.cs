@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -38,7 +39,7 @@ public class PlayerController : MonoBehaviour
 
         if (currentHealth <= 0f)
         {
-            Destroy(gameObject);
+            SceneManager.LoadScene("Menu");
         }
     }
 }
