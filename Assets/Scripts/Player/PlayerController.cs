@@ -2,25 +2,43 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
-    private float _speed;
+    public float speed;
 
-    private PlayerInputController _playerInputController;
+    [SerializeField]
+    private HealthBarUI healthBar;
+    private float maxHealth = 100f;
+    private float currentHealth;
+
+    private PlayerInputController playerInputController;
 
     private void Awake()
     {
-        _playerInputController = GetComponent<PlayerInputController>();
+        playerInputController = GetComponent<PlayerInputController>();
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
+        healthBar.SetHealth(currentHealth);
     }
 
     private void Update()
     {
         Vector3 positionChange = new Vector3(
-            _playerInputController.MovementInputVector.x,
+            playerInputController.MovementInputVector.x,
             0,
-            _playerInputController.MovementInputVector.y)
+            playerInputController.MovementInputVector.y)
             * Time.deltaTime
-            * _speed;
+            * speed;
 
         transform.position += positionChange;
+    }
+
+    public void ChangeHealth(float amount)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
+        healthBar.SetHealth(currentHealth);
+
+        if (currentHealth <= 0f)
+        {
+            Destroy(gameObject);
+        }
     }
 }
