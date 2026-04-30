@@ -5,6 +5,9 @@ public class PlayerController : MonoBehaviour
 {
     public float speed;
 
+    public float projectileDamage = 5f;
+    public float damageMultiplier = 1f;
+
     [SerializeField]
     private float mouseLookSensitivity = 0.2f;
 

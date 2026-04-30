@@ -17,12 +17,14 @@ public class PlayerInputController : MonoBehaviour
     private SwitchCamera switchCamera;
     private SoundEffectPlayer soundEffectPlayer;
     private PlayerInput playerInput;
+    private PlayerController playerController;
 
     private void Awake()
     {
         soundEffectPlayer = FindAnyObjectByType<SoundEffectPlayer>();
         switchCamera = GetComponent<SwitchCamera>();
         playerInput = GetComponent<PlayerInput>();
+        playerController = GetComponent<PlayerController>();
     }
 
     private void OnMove(InputValue inputValue)
@@ -43,7 +45,11 @@ public class PlayerInputController : MonoBehaviour
         {
             GameObject projectileObj = Instantiate(capotePrefab);
             Capote projectile = projectileObj.GetComponent<Capote>();
-            projectile.Init(transform.position + transform.forward, transform.forward);
+            projectile.Init(
+                transform.position + transform.forward,
+                transform.forward,
+                playerController.projectileDamage * playerController.damageMultiplier
+            );
             soundEffectPlayer.PlayThrowSound();
         }
     }

@@ -8,14 +8,15 @@ public class Capote : MonoBehaviour
     [SerializeField]
     private Transform visual;
 
-    public int damages = 5;
+    public float damages;
 
     private Vector3 moveDirection;
 
-    public void Init(Vector3 startPosition, Vector3 direction)
+    public void Init(Vector3 startPosition, Vector3 direction, float damageAmount)
     {
         transform.position = startPosition;
         moveDirection = direction.normalized;
+        damages = damageAmount;
     }
 
     void Update()

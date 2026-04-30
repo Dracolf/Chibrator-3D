@@ -7,7 +7,7 @@ public class ZiziController : MonoBehaviour
     [SerializeField]
     private int _avgSpeed = 3;
 
-    public int health = 50;
+    public float health = 50f;
     public int speed;
 
     private ZiziInfosDisplay infos;
@@ -62,7 +62,7 @@ public class ZiziController : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(float amount)
     {
         health -= amount;
 
@@ -75,7 +75,7 @@ public class ZiziController : MonoBehaviour
         {
             Destroy(gameObject);
             Score score = FindAnyObjectByType<Score>();
-            score.IncreaseScore(100);
+            score.IncreaseScore(20);
         }
     }
 }
