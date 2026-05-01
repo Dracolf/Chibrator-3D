@@ -17,8 +17,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private HealthBarUI healthBar;
 
-    private float maxHealth = 100f;
-    private float currentHealth;
+    public float maxHealth = 100f;
+    public float currentHealth;
 
     private PlayerInputController playerInputController;
 

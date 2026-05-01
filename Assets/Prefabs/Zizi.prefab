@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 612966328338423977}
   - component: {fileID: 4873506920096887359}
   - component: {fileID: 847185768697643342}
+  - component: {fileID: -160531997187086224}
   m_Layer: 0
   m_Name: Zizi
   m_TagString: Untagged
@@ -262,6 +263,21 @@ MonoBehaviour:
   _avgSpeed: 3
   health: 50
   speed: 0
+--- !u!114 &-160531997187086224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383199939033230392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6e251edd41238a4faa76216fcfbc5be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemDrop
+  viagra: {fileID: 6228651693166747614, guid: 7a6ee4603688359488de1d623680b044, type: 3}
+  lubrifiant: {fileID: 6228651693166747614, guid: 46cab7ecef729564187a60e1103817d8, type: 3}
+  medikit: {fileID: 6228651693166747614, guid: 06d01da3c12de724995987f2ceda0e1d, type: 3}
 --- !u!1 &5028056758231048284
 GameObject:
   m_ObjectHideFlags: 0

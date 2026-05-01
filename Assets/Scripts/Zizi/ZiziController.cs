@@ -11,6 +11,7 @@ public class ZiziController : MonoBehaviour
     public int speed;
 
     private ZiziInfosDisplay infos;
+    private ItemDrop itemDrop;
 
     private void Start()
     {
@@ -28,6 +29,7 @@ public class ZiziController : MonoBehaviour
             infos.SetMaxHealth(health);
             infos.SetHealth(health);
         }
+        itemDrop = GetComponent<ItemDrop>();
     }
 
     private void Update()
@@ -73,9 +75,17 @@ public class ZiziController : MonoBehaviour
 
         if (health <= 0)
         {
-            Destroy(gameObject);
             Score score = FindAnyObjectByType<Score>();
             score.IncreaseScore(20);
+            if (score.score % 200 == 0)
+            {
+                int dropBonusOrNot = Random.Range(0,5);
+                if (dropBonusOrNot < 4)
+                {
+                    itemDrop.DropBonus();
+                }
+            }
+            Destroy(gameObject);
         }
     }
 }

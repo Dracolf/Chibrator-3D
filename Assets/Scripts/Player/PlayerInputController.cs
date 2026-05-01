@@ -7,6 +7,7 @@ public class PlayerInputController : MonoBehaviour
     public Vector2 LookInputVector { get; private set; }
     public bool IsMouseLook { get; private set; }
     public bool DanceTriggered { get; private set; }
+    public bool AttackTriggered { get; private set; }
 
     [SerializeField]
     private GameObject capotePrefab;
@@ -43,14 +44,23 @@ public class PlayerInputController : MonoBehaviour
     {
         if (inputValue.isPressed)
         {
+            AttackTriggered = true;
+
             GameObject projectileObj = Instantiate(capotePrefab);
             Capote projectile = projectileObj.GetComponent<Capote>();
+
             projectile.Init(
                 transform.position + transform.forward,
                 transform.forward,
                 playerController.projectileDamage * playerController.damageMultiplier
             );
-            soundEffectPlayer.PlayThrowSound();
+
+            if (soundEffectPlayer != null)
+            {
+                soundEffectPlayer.PlayThrowSound();
+            }
+
+            Destroy(projectileObj, 15f);
         }
     }
 
@@ -60,6 +70,11 @@ public class PlayerInputController : MonoBehaviour
         {
             DanceTriggered = true;
         }
+    }
+
+    public void ResetAttackTrigger()
+    {
+        AttackTriggered = false;
     }
 
     public void ResetDanceTrigger()

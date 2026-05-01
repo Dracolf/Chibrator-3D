@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b6e251edd41238a4faa76216fcfbc5be
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - viagra: {fileID: 6228651693166747614, guid: 7a6ee4603688359488de1d623680b044, type: 3}
+  - lubrifiant: {fileID: 6228651693166747614, guid: 46cab7ecef729564187a60e1103817d8, type: 3}
+  - medikit: {fileID: 6228651693166747614, guid: 06d01da3c12de724995987f2ceda0e1d, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

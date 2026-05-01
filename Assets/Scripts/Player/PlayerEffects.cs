@@ -10,6 +10,8 @@ public class PlayerEffects : MonoBehaviour
         DamageMultiplier
     }
 
+    public IReadOnlyDictionary<string, EffectData> ActiveEffectData => activeEffectData;
+
     private PlayerController playerController;
 
     private readonly Dictionary<string, Coroutine> activeEffects = new();
@@ -78,12 +80,15 @@ public class PlayerEffects : MonoBehaviour
         }
     }
 
-    private class EffectData
+    public class EffectData
     {
         public string Id { get; }
         public EffectType Type { get; }
         public float Value { get; }
         public float Duration { get; }
+        public float EndTime { get; }
+
+        public float RemainingTime => Mathf.Max(0f, EndTime - Time.time);
 
         public EffectData(string id, EffectType type, float value, float duration)
         {
@@ -91,6 +96,7 @@ public class PlayerEffects : MonoBehaviour
             Type = type;
             Value = value;
             Duration = duration;
+            EndTime = Time.time + duration;
         }
     }
 }

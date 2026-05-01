@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SwitchCamera : MonoBehaviour
 {
-    public GameObject mainCamera, povCamera;
+    public GameObject mainCamera, povCamera, backCamera, skyCamera;
     int manager = 0;
 
 
@@ -17,6 +17,14 @@ public class SwitchCamera : MonoBehaviour
         {
             PovCam();
             manager = 1;
+        } else if (manager == 1)
+        {
+            BackCam();
+            manager = 2;
+        } else if (manager == 2)
+        {
+            SkyCam();
+            manager = 3;
         } else
         {
             MainCam();
@@ -28,12 +36,32 @@ public class SwitchCamera : MonoBehaviour
     {
         mainCamera.SetActive(true);
         povCamera.SetActive(false);
+        backCamera.SetActive(false);
+        skyCamera.SetActive(false);
     }
 
     private void PovCam()
     {
         mainCamera.SetActive(false);
         povCamera.SetActive(true);
+        backCamera.SetActive(false);
+        skyCamera.SetActive(false);
+    }
+
+    private void BackCam()
+    {
+        mainCamera.SetActive(false);
+        povCamera.SetActive(false);
+        backCamera.SetActive(true);
+        skyCamera.SetActive(false);
+    }
+
+    private void SkyCam()
+    {
+        mainCamera.SetActive(false);
+        povCamera.SetActive(false);
+        backCamera.SetActive(false);
+        skyCamera.SetActive(true);
     }
 
 }
