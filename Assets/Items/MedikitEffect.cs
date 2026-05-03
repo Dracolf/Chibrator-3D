@@ -19,7 +19,7 @@ public class MedikitEffect : MonoBehaviour
 
             if (soundEffectPlayer != null)
             {
-                soundEffectPlayer.PlayMedikitSound();
+                soundEffectPlayer.PlaySound(SoundEffectType.Medikit);
             }
 
             Destroy(gameObject);

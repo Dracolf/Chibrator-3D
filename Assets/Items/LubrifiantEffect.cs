@@ -24,7 +24,7 @@ public class LubrifiantEffect : MonoBehaviour
 
             if (soundEffectPlayer != null)
             {
-                soundEffectPlayer.PlayLubrifiantSound();
+                soundEffectPlayer.PlaySound(SoundEffectType.Lubrifiant);
             }
 
             Destroy(gameObject);

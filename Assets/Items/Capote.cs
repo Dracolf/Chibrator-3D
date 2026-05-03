@@ -28,10 +28,24 @@ public class Capote : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         ZiziController zizi = other.GetComponent<ZiziController>();
+        BossController boss = other.GetComponent<BossController>();
+        TerroristeController terroriste = other.GetComponent<TerroristeController>();
 
         if (zizi != null)
         {
             zizi.TakeDamage(damages);
+            Destroy(gameObject);
+        }
+        
+        if (boss != null)
+        {
+            boss.TakeDamage(damages);
+            Destroy(gameObject);
+        }
+
+        if (terroriste != null)
+        {
+            terroriste.TakeDamage(damages);
             Destroy(gameObject);
         }
     }

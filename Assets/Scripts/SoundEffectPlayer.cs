@@ -1,40 +1,49 @@
+using System;
 using UnityEngine;
+
+public enum SoundEffectType
+{
+    Throw,
+    ZiziSpawn,
+    Lubrifiant,
+    Viagra,
+    Medikit,
+    BossSpawn,
+    BossDeath,
+    TerroristeSpawn,
+    TerroristeDeath
+}
 
 public class SoundEffectPlayer : MonoBehaviour
 {
-    private AudioSource audioSource;
+    [Serializable]
+    private class SoundEffect
+    {
+        public SoundEffectType type;
+        public AudioClip clip;
+    }
 
     [SerializeField]
-    private AudioClip throwSound, ziziSpawnSound, lubrifiantSound, viagraSound,
-        medikitSound;
+    private SoundEffect[] soundEffects;
+
+    private AudioSource audioSource;
 
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
     }
 
-    public void PlayThrowSound()
+    public void PlaySound(SoundEffectType soundType)
     {
-        audioSource.PlayOneShot(throwSound);
-    }
+        foreach (SoundEffect soundEffect in soundEffects)
+        {
+            if (soundEffect.type == soundType)
+            {
+                audioSource.PlayOneShot(soundEffect.clip);
+                return;
+            }
+        }
 
-    public void PlayZiziSpawnSound()
-    {
-        audioSource.PlayOneShot(ziziSpawnSound);
-    }
-
-    public void PlayLubrifiantSound()
-    {
-        audioSource.PlayOneShot(lubrifiantSound);
-    }
-
-    public void PlayViagraSound()
-    {
-        audioSource.PlayOneShot(viagraSound);
-    }
-
-    public void PlayMedikitSound()
-    {
-        audioSource.PlayOneShot(medikitSound);
+        Debug.LogWarning("Aucun son trouvé pour : " + soundType);
     }
 }

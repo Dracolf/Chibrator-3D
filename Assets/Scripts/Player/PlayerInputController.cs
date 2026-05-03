@@ -57,7 +57,7 @@ public class PlayerInputController : MonoBehaviour
 
             if (soundEffectPlayer != null)
             {
-                soundEffectPlayer.PlayThrowSound();
+                soundEffectPlayer.PlaySound(SoundEffectType.Throw);
             }
 
             Destroy(projectileObj, 15f);

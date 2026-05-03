@@ -14,20 +14,29 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float gamepadLookSensitivity = 200f;
 
+    public float maxHealth = 100f;
+    public float currentHealth;
+
     [SerializeField]
     private HealthBarUI healthBar;
 
-    public float maxHealth = 100f;
-    public float currentHealth;
+    [Header("Map Limits")]
+    [SerializeField]
+    private float mapHalfSize = 37.5f;
+
+    [SerializeField]
+    private float playerBoundaryMargin = 0.7f;
 
     private PlayerInputController playerInputController;
 
     private void Awake()
     {
         playerInputController = GetComponent<PlayerInputController>();
+
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
         healthBar.SetHealth(currentHealth);
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -54,7 +63,15 @@ public class PlayerController : MonoBehaviour
             moveDirection.Normalize();
         }
 
-        transform.position += moveDirection * speed * Time.deltaTime;
+        Vector3 nextPosition = transform.position + moveDirection * speed * Time.deltaTime;
+
+        float minPosition = -mapHalfSize + playerBoundaryMargin;
+        float maxPosition = mapHalfSize - playerBoundaryMargin;
+
+        nextPosition.x = Mathf.Clamp(nextPosition.x, minPosition, maxPosition);
+        nextPosition.z = Mathf.Clamp(nextPosition.z, minPosition, maxPosition);
+
+        transform.position = nextPosition;
     }
 
     public void ChangeHealth(float amount)
@@ -67,10 +84,12 @@ public class PlayerController : MonoBehaviour
             Score score = FindAnyObjectByType<Score>();
 
             PlayerPrefs.SetInt("LastScore", score.score);
+
             if (score.score > PlayerPrefs.GetInt("HighScore", 0))
             {
                 PlayerPrefs.SetInt("HighScore", score.score);
             }
+
             PlayerPrefs.Save();
 
             Cursor.lockState = CursorLockMode.None;

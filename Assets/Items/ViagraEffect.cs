@@ -24,7 +24,7 @@ public class ViagraEffect : MonoBehaviour
 
             if (soundEffectPlayer != null)
             {
-                soundEffectPlayer.PlayViagraSound();
+                soundEffectPlayer.PlaySound(SoundEffectType.Viagra);
             }
 
             Destroy(gameObject);
