@@ -57,10 +57,10 @@ public class PlayerEffectsDisplay : MonoBehaviour
         switch (effectType)
         {
             case PlayerEffects.EffectType.SpeedMultiplier:
-                return "Vitesse";
+                return "Vitesse x2";
 
             case PlayerEffects.EffectType.DamageMultiplier:
-                return "Dégâts";
+                return "Dégâts x2";
 
             default:
                 return "Effet";

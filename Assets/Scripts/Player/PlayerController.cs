@@ -8,11 +8,23 @@ public class PlayerController : MonoBehaviour
     public float projectileDamage = 5f;
     public float damageMultiplier = 1f;
 
+    [Header("Look")]
     [SerializeField]
     private float mouseLookSensitivity = 0.2f;
 
     [SerializeField]
     private float gamepadLookSensitivity = 200f;
+
+    [SerializeField]
+    private Transform cameraPivot;
+
+    [SerializeField]
+    private float minCameraPitch = -70f;
+
+    [SerializeField]
+    private float maxCameraPitch = 70f;
+
+    private float cameraPitch;
 
     public float maxHealth = 100f;
     public float currentHealth;
@@ -43,6 +55,12 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        HandleLook();
+        HandleMovement();
+    }
+
+    private void HandleLook()
+    {
         Vector2 lookInput = playerInputController.LookInputVector;
 
         float currentSensitivity = playerInputController.IsMouseLook
@@ -52,6 +70,19 @@ public class PlayerController : MonoBehaviour
         float yaw = lookInput.x * currentSensitivity * Time.deltaTime;
         transform.Rotate(0f, yaw, 0f);
 
+        float pitch = lookInput.y * currentSensitivity * Time.deltaTime;
+
+        cameraPitch -= pitch;
+        cameraPitch = Mathf.Clamp(cameraPitch, minCameraPitch, maxCameraPitch);
+
+        if (cameraPivot != null)
+        {
+            cameraPivot.localRotation = Quaternion.Euler(cameraPitch, 0f, 0f);
+        }
+    }
+
+    private void HandleMovement()
+    {
         Vector2 moveInput = playerInputController.MovementInputVector;
 
         Vector3 moveDirection =

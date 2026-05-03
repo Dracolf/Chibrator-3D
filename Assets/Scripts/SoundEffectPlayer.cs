@@ -11,7 +11,8 @@ public enum SoundEffectType
     BossSpawn,
     BossDeath,
     TerroristeSpawn,
-    TerroristeDeath
+    TerroristeDeath,
+    SidaSpawn
 }
 
 public class SoundEffectPlayer : MonoBehaviour
