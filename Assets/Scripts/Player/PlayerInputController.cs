@@ -11,6 +11,8 @@ public class PlayerInputController : MonoBehaviour
 
     [SerializeField]
     private GameObject capotePrefab;
+    [SerializeField]
+    private GameObject pillowBarrierPrefab;
 
     [SerializeField]
     private string mouseSchemeName = "Keyboard&Mouse";
@@ -19,6 +21,19 @@ public class PlayerInputController : MonoBehaviour
     private SoundEffectPlayer soundEffectPlayer;
     private PlayerInput playerInput;
     private PlayerController playerController;
+    private NukeCinematicManager nukeCinematicManager;
+    private Inventory inventory;
+
+    [Header("Nuke Cooldown")]
+    [SerializeField]
+    private float nukeCooldownDuration = 60f;
+
+    private float nextNukeAvailableTime = 0f;
+
+    public float NukeCooldownRemaining =>
+        Mathf.Max(0f, nextNukeAvailableTime - Time.unscaledTime);
+
+    public bool IsNukeOnCooldown => NukeCooldownRemaining > 0f;
 
     private void Awake()
     {
@@ -26,6 +41,9 @@ public class PlayerInputController : MonoBehaviour
         switchCamera = GetComponent<SwitchCamera>();
         playerInput = GetComponent<PlayerInput>();
         playerController = GetComponent<PlayerController>();
+        nukeCinematicManager = FindAnyObjectByType<NukeCinematicManager>();
+        inventory = GetComponent<Inventory>();
+
     }
 
     private void OnMove(InputValue inputValue)
@@ -87,6 +105,53 @@ public class PlayerInputController : MonoBehaviour
         if (inputValue.isPressed)
         {
             switchCamera.ManageCamera();
+        }
+    }
+
+    private void OnNuke(InputValue inputValue)
+    {
+        if (!inputValue.isPressed)
+        {
+            return;
+        }
+
+        if (inventory == null || !inventory.HasItem("Nuke"))
+        {
+            return;
+        }
+
+        if (IsNukeOnCooldown)
+        {
+            soundEffectPlayer.PlaySound(SoundEffectType.Error);
+            return;
+        }
+
+        inventory.RemoveItemFromInventory("Nuke");
+        nextNukeAvailableTime = Time.unscaledTime + nukeCooldownDuration;
+
+        if (soundEffectPlayer != null)
+        {
+            soundEffectPlayer.PlaySound(SoundEffectType.NukeIncoming);
+        }
+
+        if (nukeCinematicManager != null)
+        {
+            nukeCinematicManager.PlayNukeCinematic();
+        }
+    }
+
+    private void OnPlaceBarrier(InputValue inputValue)
+    {
+        if (inventory == null || !inventory.HasItem("BodyPillow"))
+        {
+            return;
+        }
+        inventory.RemoveItemFromInventory("BodyPillow");
+        Instantiate(pillowBarrierPrefab, transform.position, transform.rotation);
+
+        if (soundEffectPlayer != null)
+        {
+            soundEffectPlayer.PlaySound(SoundEffectType.Yamete);
         }
     }
 }

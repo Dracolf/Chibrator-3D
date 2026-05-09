@@ -40,10 +40,24 @@ public class PlayerController : MonoBehaviour
     private float playerBoundaryMargin = 0.7f;
 
     private PlayerInputController playerInputController;
+    private CameraEffects cameraEffects;
+
+    [Header("Sounds")]
+    [SerializeField]
+    private AudioSource footstepsAudioSource;
+    [SerializeField]
+    private AudioSource hitAudioSource;
+    [SerializeField]
+    private AudioClip footSteps, footStepsSprint;
+
+    [SerializeField]
+    private float hitSoundStopDelay = 0.2f;
+    private float lastDamageTime;   
 
     private void Awake()
     {
         playerInputController = GetComponent<PlayerInputController>();
+        cameraEffects = FindAnyObjectByType<CameraEffects>();
 
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
@@ -57,6 +71,7 @@ public class PlayerController : MonoBehaviour
     {
         HandleLook();
         HandleMovement();
+        ManageHitSound();
     }
 
     private void HandleLook()
@@ -89,10 +104,14 @@ public class PlayerController : MonoBehaviour
             transform.right * moveInput.x +
             transform.forward * moveInput.y;
 
+        bool isMoving = moveInput.magnitude > 0.01f;
+
         if (moveDirection.magnitude > 1f)
         {
             moveDirection.Normalize();
         }
+
+        ManageFootstepsSound(isMoving);
 
         Vector3 nextPosition = transform.position + moveDirection * speed * Time.deltaTime;
 
@@ -107,25 +126,84 @@ public class PlayerController : MonoBehaviour
 
     public void ChangeHealth(float amount)
     {
+        if (amount < 0f && cameraEffects != null)
+        {
+            lastDamageTime = Time.time;
+
+            if (hitAudioSource != null && !hitAudioSource.isPlaying)
+            {
+                hitAudioSource.Play();
+            }
+            cameraEffects.PlayDamageFlash();
+        }
+
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
         healthBar.SetHealth(currentHealth);
 
         if (currentHealth <= 0f)
         {
+            if (hitAudioSource != null && hitAudioSource.isPlaying)
+            {
+                hitAudioSource.Stop();
+            }
+
             Score score = FindAnyObjectByType<Score>();
 
+            int currentMoney = PlayerPrefs.GetInt("money");
             PlayerPrefs.SetInt("LastScore", score.score);
+            PlayerPrefs.SetInt("money", currentMoney + score.score);
 
             if (score.score > PlayerPrefs.GetInt("HighScore", 0))
             {
                 PlayerPrefs.SetInt("HighScore", score.score);
             }
 
+            PlayerPrefs.SetInt("nukeAmount", 0);
+            PlayerPrefs.SetInt("pillowAmount", 0);
+
             PlayerPrefs.Save();
 
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             SceneManager.LoadScene("Menu");
+        }
+    }
+
+    private void ManageFootstepsSound(bool isMoving)
+    {
+        if (footstepsAudioSource == null)
+        {
+            return;
+        }
+
+        footstepsAudioSource.generator = speed > 10f ? footStepsSprint : footSteps;
+
+        if (isMoving)
+        {
+            if (!footstepsAudioSource.isPlaying)
+            {
+                footstepsAudioSource.Play();
+            }
+        }
+        else
+        {
+            if (footstepsAudioSource.isPlaying)
+            {
+                footstepsAudioSource.Stop();
+            }
+        }
+    }
+
+    private void ManageHitSound()
+    {
+        if (hitAudioSource == null || !hitAudioSource.isPlaying)
+        {
+            return;
+        }
+
+        if (Time.time > lastDamageTime + hitSoundStopDelay)
+        {
+            hitAudioSource.Stop();
         }
     }
 }

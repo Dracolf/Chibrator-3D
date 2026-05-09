@@ -10,6 +10,9 @@ public class BossController : MonoBehaviour
     private ZiziInfosDisplay infos;
     private ItemDrop itemDrop;
     private SoundEffectPlayer soundEffectPlayer;
+    private BossSpawner bossSpawner;
+    private TerroristeSpawner terroristeSpawner;
+
 
     private void Start()
     {
@@ -27,6 +30,8 @@ public class BossController : MonoBehaviour
         }
         itemDrop = GetComponent<ItemDrop>();
         soundEffectPlayer = FindAnyObjectByType<SoundEffectPlayer>();
+        bossSpawner = FindAnyObjectByType<BossSpawner>();
+        terroristeSpawner = FindAnyObjectByType<TerroristeSpawner>();
     }
 
     private void Update()
@@ -54,10 +59,15 @@ public class BossController : MonoBehaviour
     private void OnCollisionStay(Collision collision)
     {
         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+        BodyPillowController bodyPillow = collision.gameObject.GetComponent<BodyPillowController>();
 
         if (player != null)
         {
-            player.ChangeHealth(-1);
+            player.ChangeHealth(-2);
+        }
+        if (bodyPillow != null)
+        {
+            bodyPillow.TakeDamage(2f);
         }
     }
 
@@ -70,18 +80,31 @@ public class BossController : MonoBehaviour
             infos.SetHealth(health);
         }
 
+        soundEffectPlayer.PlaySound(SoundEffectType.BossHit);
+
         if (health <= 0)
         {
             Score score = FindAnyObjectByType<Score>();
             score.IncreaseScore(100);
+
             if (score.score % 200 == 0)
             {
-                int dropBonusOrNot = Random.Range(0,5);
-                if (dropBonusOrNot < 4)
+                if (itemDrop != null)
                 {
-                    itemDrop.DropBonus();
+                    itemDrop.TryDropBonus();
                 }
             }
+
+            if (score.score % 400 == 0)
+            {
+                terroristeSpawner.SpawnTerroriste();
+            }
+
+            if (score.score % 1000 == 0)
+            {
+                bossSpawner.SpawnBoss();
+            }
+            
             soundEffectPlayer.PlaySound(SoundEffectType.BossDeath);
             Destroy(gameObject);
         }

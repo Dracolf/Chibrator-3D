@@ -11,8 +11,17 @@ public enum SoundEffectType
     BossSpawn,
     BossDeath,
     TerroristeSpawn,
-    TerroristeDeath,
-    SidaSpawn
+    Boom,
+    SidaSpawn,
+    NukeIncoming,
+    Yamete,
+    ItemCollect,
+    ZiziHit,
+    ZiziDeath,
+    BossHit,
+    SoftProut,
+    Buy,
+    Error
 }
 
 public class SoundEffectPlayer : MonoBehaviour
@@ -40,6 +49,21 @@ public class SoundEffectPlayer : MonoBehaviour
         {
             if (soundEffect.type == soundType)
             {
+                if (soundType == SoundEffectType.ZiziHit || soundType == SoundEffectType.ZiziDeath)
+                {
+                    audioSource.PlayOneShot(soundEffect.clip, 0.5f);
+                    return;
+                }
+                if (soundType == SoundEffectType.BossSpawn || soundType == SoundEffectType.BossDeath)
+                {
+                    audioSource.PlayOneShot(soundEffect.clip, 1.5f);
+                    return;
+                }
+                if (soundType == SoundEffectType.Error)
+                {
+                    audioSource.PlayOneShot(soundEffect.clip, 2f);
+                    return;
+                }
                 audioSource.PlayOneShot(soundEffect.clip);
                 return;
             }

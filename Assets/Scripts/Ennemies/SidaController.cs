@@ -3,7 +3,7 @@ using UnityEngine;
 public class SidaController : MonoBehaviour
 {
     [SerializeField]
-    private int avgSpeed = 10;
+    private int avgSpeed = 15;
 
     [SerializeField]
     private Transform visual;

@@ -80,6 +80,11 @@ public class PlayerEffects : MonoBehaviour
         }
     }
 
+    public bool HasActiveEffect(string effectId)
+    {
+        return activeEffectData.ContainsKey(effectId);
+    }
+
     public class EffectData
     {
         public string Id { get; }

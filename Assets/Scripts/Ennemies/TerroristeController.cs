@@ -10,6 +10,8 @@ public class TerroristeController : MonoBehaviour
     private ZiziInfosDisplay infos;
     private ItemDrop itemDrop;
     private SoundEffectPlayer soundEffectPlayer;
+    private BossSpawner bossSpawner;
+    private TerroristeSpawner terroristeSpawner;
 
     private void Start()
     {
@@ -27,6 +29,8 @@ public class TerroristeController : MonoBehaviour
         }
         itemDrop = GetComponent<ItemDrop>();
         soundEffectPlayer = FindAnyObjectByType<SoundEffectPlayer>();
+        bossSpawner = FindAnyObjectByType<BossSpawner>();
+        terroristeSpawner = FindAnyObjectByType<TerroristeSpawner>();
     }
 
     private void Update()
@@ -54,11 +58,18 @@ public class TerroristeController : MonoBehaviour
     private void OnCollisionStay(Collision collision)
     {
         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+        BodyPillowController bodyPillow = collision.gameObject.GetComponent<BodyPillowController>();
 
         if (player != null)
         {
-            soundEffectPlayer.PlaySound(SoundEffectType.TerroristeDeath);
+            soundEffectPlayer.PlaySound(SoundEffectType.Boom);
             player.ChangeHealth(-100);
+        }
+        if (bodyPillow != null)
+        {
+            bodyPillow.TakeDamage(100f);
+            soundEffectPlayer.PlaySound(SoundEffectType.Boom);
+            Destroy(gameObject);
         }
     }
 
@@ -71,19 +82,38 @@ public class TerroristeController : MonoBehaviour
             infos.SetHealth(health);
         }
 
+        soundEffectPlayer.PlaySound(SoundEffectType.ZiziHit);
+
         if (health <= 0)
         {
             Score score = FindAnyObjectByType<Score>();
             score.IncreaseScore(40);
+
             if (score.score % 200 == 0)
             {
-                int dropBonusOrNot = Random.Range(0,5);
-                if (dropBonusOrNot < 4)
+                if (itemDrop != null)
                 {
-                    itemDrop.DropBonus();
+                    itemDrop.TryDropBonus();
                 }
             }
-            soundEffectPlayer.PlaySound(SoundEffectType.TerroristeDeath);
+            
+            if (score.score % 400 == 0)
+            {
+                terroristeSpawner.SpawnTerroriste();
+            }
+
+            if (score.score % 1000 == 0)
+            {
+                bossSpawner.SpawnBoss();
+            }
+            
+            soundEffectPlayer.PlaySound(SoundEffectType.Boom);
+
+            CameraEffects cameraEffects = FindAnyObjectByType<CameraEffects>();
+            if (cameraEffects != null)
+            {
+                cameraEffects.PlayShake(0.25f, 0.3f);
+            }
             Destroy(gameObject);
         }
     }

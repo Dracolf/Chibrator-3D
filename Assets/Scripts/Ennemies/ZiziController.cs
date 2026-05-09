@@ -14,10 +14,12 @@ public class ZiziController : MonoBehaviour
     private ItemDrop itemDrop;
     private BossSpawner bossSpawner;
     private TerroristeSpawner terroristeSpawner;
+    private SoundEffectPlayer soundEffectPlayer;
 
     private void Start()
     {
         PlayerController player = FindAnyObjectByType<PlayerController>();
+        soundEffectPlayer = FindAnyObjectByType<SoundEffectPlayer>();
         if (player != null)
         {
             target = player.transform;
@@ -61,10 +63,15 @@ public class ZiziController : MonoBehaviour
     private void OnCollisionStay(Collision collision)
     {
         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+        BodyPillowController bodyPillow = collision.gameObject.GetComponent<BodyPillowController>();
 
         if (player != null)
         {
             player.ChangeHealth(-1);
+        }
+        if (bodyPillow != null)
+        {
+            bodyPillow.TakeDamage(1f);
         }
     }
 
@@ -77,26 +84,31 @@ public class ZiziController : MonoBehaviour
             infos.SetHealth(health);
         }
 
+        soundEffectPlayer.PlaySound(SoundEffectType.ZiziHit);
+
         if (health <= 0)
         {
             Score score = FindAnyObjectByType<Score>();
             score.IncreaseScore(20);
+
             if (score.score % 200 == 0)
             {
-                int dropBonusOrNot = Random.Range(0,5);
-                if (dropBonusOrNot < 4)
+                if (itemDrop != null)
                 {
-                    itemDrop.DropBonus();
+                    itemDrop.TryDropBonus();
                 }
             }
+
             if (score.score % 400 == 0)
             {
                 terroristeSpawner.SpawnTerroriste();
             }
+
             if (score.score % 1000 == 0)
             {
                 bossSpawner.SpawnBoss();
             }
+            soundEffectPlayer.PlaySound(SoundEffectType.ZiziDeath);
             Destroy(gameObject);
         }
     }
