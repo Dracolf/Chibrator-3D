@@ -7085,7 +7085,7 @@ MonoBehaviour:
   _spawnInterval: 3
   canCreateNewSpawners: 1
   minSpawnDistanceFromPlayer: 8
-  maxSpawnDistanceFromPlayer: 12
+  maxSpawnDistanceFromPlayer: 13
   spawnY: 1.4
   mapHalfSize: 37.5
   spawnBoundaryMargin: 1.5
@@ -7666,7 +7666,7 @@ MonoBehaviour:
   speed: 10
   projectileDamage: 5
   damageMultiplier: 1
-  mouseLookSensitivity: 30
+  mouseLookSensitivity: 0.3
   gamepadLookSensitivity: 200
   cameraPivot: {fileID: 1858955193}
   minCameraPitch: -34
@@ -13477,11 +13477,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossSpawner
   _boss: {fileID: 732330300203866554, guid: f9adb1fbce9c65d4cb33a8343432d973, type: 3}
-  minSpawnDistanceFromPlayer: 16
-  maxSpawnDistanceFromPlayer: 24
+  minSpawnDistanceFromPlayer: 18
+  maxSpawnDistanceFromPlayer: 28
   spawnY: 3.4
   mapHalfSize: 37.5
-  spawnBoundaryMargin: 3
+  spawnBoundaryMargin: 4
 --- !u!4 &1641818474
 Transform:
   m_ObjectHideFlags: 0
@@ -16462,11 +16462,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TerroristeSpawner
   _terroriste: {fileID: 1383199939033230392, guid: 5b03c27ff00bce84a8ea936c0c5a2b72, type: 3}
-  minSpawnDistanceFromPlayer: 14
-  maxSpawnDistanceFromPlayer: 20
+  minSpawnDistanceFromPlayer: 16
+  maxSpawnDistanceFromPlayer: 24
   spawnY: 1.4
   mapHalfSize: 37.5
-  spawnBoundaryMargin: 1.5
+  spawnBoundaryMargin: 2.5
 --- !u!4 &1884685444
 Transform:
   m_ObjectHideFlags: 0

@@ -55,33 +55,13 @@ public class BossSpawner : MonoBehaviour
 
     private Vector3 GetSpawnPositionAroundPlayer()
     {
-        if (playerTransform == null)
-        {
-            return new Vector3(
-                Random.Range(-25f, 25f),
-                spawnY,
-                Random.Range(-25f, 25f)
-            );
-        }
-
-        Vector2 randomDirection = Random.insideUnitCircle.normalized;
-        float randomDistance = Random.Range(minSpawnDistanceFromPlayer, maxSpawnDistanceFromPlayer);
-
-        Vector3 spawnOffset = new Vector3(
-            randomDirection.x * randomDistance,
-            0f,
-            randomDirection.y * randomDistance
+        return EnemySpawnPositionHelper.GetSpawnPositionAroundPlayer(
+            playerTransform,
+            minSpawnDistanceFromPlayer,
+            maxSpawnDistanceFromPlayer,
+            spawnY,
+            mapHalfSize,
+            spawnBoundaryMargin
         );
-
-        Vector3 spawnPosition = playerTransform.position + spawnOffset;
-
-        float minPosition = -mapHalfSize + spawnBoundaryMargin;
-        float maxPosition = mapHalfSize - spawnBoundaryMargin;
-
-        spawnPosition.x = Mathf.Clamp(spawnPosition.x, minPosition, maxPosition);
-        spawnPosition.z = Mathf.Clamp(spawnPosition.z, minPosition, maxPosition);
-        spawnPosition.y = spawnY;
-
-        return spawnPosition;
     }
 }

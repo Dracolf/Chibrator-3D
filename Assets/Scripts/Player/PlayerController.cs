@@ -78,14 +78,21 @@ public class PlayerController : MonoBehaviour
     {
         Vector2 lookInput = playerInputController.LookInputVector;
 
-        float currentSensitivity = playerInputController.IsMouseLook
-            ? mouseLookSensitivity
-            : gamepadLookSensitivity;
+        float yaw;
+        float pitch;
 
-        float yaw = lookInput.x * currentSensitivity * Time.deltaTime;
+        if (playerInputController.IsMouseLook)
+        {
+            yaw = lookInput.x * mouseLookSensitivity;
+            pitch = lookInput.y * mouseLookSensitivity;
+        }
+        else
+        {
+            yaw = lookInput.x * gamepadLookSensitivity * Time.deltaTime;
+            pitch = lookInput.y * gamepadLookSensitivity * Time.deltaTime;
+        }
+
         transform.Rotate(0f, yaw, 0f);
-
-        float pitch = lookInput.y * currentSensitivity * Time.deltaTime;
 
         cameraPitch -= pitch;
         cameraPitch = Mathf.Clamp(cameraPitch, minCameraPitch, maxCameraPitch);
