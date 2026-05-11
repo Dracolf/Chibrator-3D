@@ -8,13 +8,21 @@ public class SidaSpawner : MonoBehaviour
     private GameObject _sida;
 
     [SerializeField]
-    private float _spawnInterval = 60f;
+    private float _spawnInterval = 30f;
 
     [SerializeField]
     private int sidaCountPerWave = 5;
 
     [SerializeField]
     private float spawnY = 50f;
+
+    [Header("Rain")]
+    [SerializeField]
+    private float rainDuration = 4f;
+
+    [Header("UI")]
+    [SerializeField]
+    private SidaRainCountdownUI sidaRainCountdownUI;
 
     [Header("Spawn Area")]
     [SerializeField]
@@ -42,29 +50,68 @@ public class SidaSpawner : MonoBehaviour
     {
         soundEffectPlayer = FindAnyObjectByType<SoundEffectPlayer>();
 
-        StartCoroutine(SpawnSidas(_spawnInterval, _sida));
+        if (sidaRainCountdownUI != null)
+        {
+            sidaRainCountdownUI.ShowCountdown(_spawnInterval);
+        }
+
+        StartCoroutine(SidaRainLoop());
     }
 
-    private IEnumerator SpawnSidas(float interval, GameObject sida)
+    private IEnumerator SidaRainLoop()
     {
         while (true)
         {
-            yield return new WaitForSeconds(interval);
+            yield return WaitBeforeNextRain();
 
-            List<Vector3> spawnPositions = GenerateSpawnPositions();
+            SpawnSidaWave();
 
-            foreach (Vector3 spawnPosition in spawnPositions)
+            yield return RainInProgress();
+        }
+    }
+
+    private IEnumerator WaitBeforeNextRain()
+    {
+        float remainingTime = _spawnInterval;
+
+        while (remainingTime > 0f)
+        {
+            if (sidaRainCountdownUI != null)
             {
-                Instantiate(
-                    sida,
-                    spawnPosition,
-                    Quaternion.identity
-                );
+                sidaRainCountdownUI.ShowCountdown(remainingTime);
+            }
 
-                if (soundEffectPlayer != null)
-                {
-                    soundEffectPlayer.PlaySound(SoundEffectType.SidaSpawn);
-                }
+            remainingTime -= Time.deltaTime;
+
+            yield return null;
+        }
+    }
+
+    private IEnumerator RainInProgress()
+    {
+        if (sidaRainCountdownUI != null)
+        {
+            sidaRainCountdownUI.HideCountdown();
+        }
+
+        yield return new WaitForSeconds(rainDuration);
+    }
+
+    private void SpawnSidaWave()
+    {
+        List<Vector3> spawnPositions = GenerateSpawnPositions();
+
+        foreach (Vector3 spawnPosition in spawnPositions)
+        {
+            Instantiate(
+                _sida,
+                spawnPosition,
+                Quaternion.identity
+            );
+
+            if (soundEffectPlayer != null)
+            {
+                soundEffectPlayer.PlaySound(SoundEffectType.SidaSpawn);
             }
         }
     }

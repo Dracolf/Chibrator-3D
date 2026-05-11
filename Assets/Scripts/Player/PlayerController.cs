@@ -45,14 +45,20 @@ public class PlayerController : MonoBehaviour
     [Header("Sounds")]
     [SerializeField]
     private AudioSource footstepsAudioSource;
+
     [SerializeField]
     private AudioSource hitAudioSource;
+
     [SerializeField]
-    private AudioClip footSteps, footStepsSprint;
+    private AudioClip footSteps;
+
+    [SerializeField]
+    private AudioClip footStepsSprint;
 
     [SerializeField]
     private float hitSoundStopDelay = 0.2f;
-    private float lastDamageTime;   
+
+    private float lastDamageTime;
 
     private void Awake()
     {
@@ -60,8 +66,12 @@ public class PlayerController : MonoBehaviour
         cameraEffects = FindAnyObjectByType<CameraEffects>();
 
         currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
-        healthBar.SetHealth(currentHealth);
+
+        if (healthBar != null)
+        {
+            healthBar.SetMaxHealth(maxHealth);
+            healthBar.SetHealth(currentHealth);
+        }
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -69,13 +79,29 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (IsGamePaused())
+        {
+            StopGameplaySounds();
+            return;
+        }
+
         HandleLook();
         HandleMovement();
         ManageHitSound();
     }
 
+    private bool IsGamePaused()
+    {
+        return PauseManager.Instance != null && PauseManager.Instance.IsPaused;
+    }
+
     private void HandleLook()
     {
+        if (playerInputController == null)
+        {
+            return;
+        }
+
         Vector2 lookInput = playerInputController.LookInputVector;
 
         float yaw;
@@ -105,6 +131,11 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
+        if (playerInputController == null)
+        {
+            return;
+        }
+
         Vector2 moveInput = playerInputController.MovementInputVector;
 
         Vector3 moveDirection =
@@ -141,39 +172,58 @@ public class PlayerController : MonoBehaviour
             {
                 hitAudioSource.Play();
             }
+
             cameraEffects.PlayDamageFlash();
         }
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
-        healthBar.SetHealth(currentHealth);
+
+        if (healthBar != null)
+        {
+            healthBar.SetHealth(currentHealth);
+        }
 
         if (currentHealth <= 0f)
         {
-            if (hitAudioSource != null && hitAudioSource.isPlaying)
-            {
-                hitAudioSource.Stop();
-            }
-
-            Score score = FindAnyObjectByType<Score>();
-
-            int currentMoney = PlayerPrefs.GetInt("money");
-            PlayerPrefs.SetInt("LastScore", score.score);
-            PlayerPrefs.SetInt("money", currentMoney + score.score);
-
-            if (score.score > PlayerPrefs.GetInt("HighScore", 0))
-            {
-                PlayerPrefs.SetInt("HighScore", score.score);
-            }
-
-            PlayerPrefs.SetInt("nukeAmount", 0);
-            PlayerPrefs.SetInt("pillowAmount", 0);
-
-            PlayerPrefs.Save();
-
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            SceneManager.LoadScene("Menu");
+            Die();
         }
+    }
+
+    private void Die()
+    {
+        StopGameplaySounds();
+
+        Score score = FindAnyObjectByType<Score>();
+
+        int finalScore = 0;
+
+        if (score != null)
+        {
+            finalScore = score.score;
+        }
+
+        int currentMoney = PlayerPrefs.GetInt("money");
+
+        PlayerPrefs.SetInt("LastScore", finalScore);
+        PlayerPrefs.SetInt("money", currentMoney + finalScore);
+
+        if (finalScore > PlayerPrefs.GetInt("HighScore", 0))
+        {
+            PlayerPrefs.SetInt("HighScore", finalScore);
+        }
+
+        PlayerPrefs.SetInt("nukeAmount", 0);
+        PlayerPrefs.SetInt("pillowAmount", 0);
+
+        PlayerPrefs.Save();
+
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        SceneManager.LoadScene("Menu");
     }
 
     private void ManageFootstepsSound(bool isMoving)
@@ -209,6 +259,19 @@ public class PlayerController : MonoBehaviour
         }
 
         if (Time.time > lastDamageTime + hitSoundStopDelay)
+        {
+            hitAudioSource.Stop();
+        }
+    }
+
+    private void StopGameplaySounds()
+    {
+        if (footstepsAudioSource != null && footstepsAudioSource.isPlaying)
+        {
+            footstepsAudioSource.Stop();
+        }
+
+        if (hitAudioSource != null && hitAudioSource.isPlaying)
         {
             hitAudioSource.Stop();
         }

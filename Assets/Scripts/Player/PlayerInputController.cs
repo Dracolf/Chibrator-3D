@@ -11,6 +11,7 @@ public class PlayerInputController : MonoBehaviour
 
     [SerializeField]
     private GameObject capotePrefab;
+
     [SerializeField]
     private GameObject pillowBarrierPrefab;
 
@@ -43,47 +44,80 @@ public class PlayerInputController : MonoBehaviour
         playerController = GetComponent<PlayerController>();
         nukeCinematicManager = FindAnyObjectByType<NukeCinematicManager>();
         inventory = GetComponent<Inventory>();
+    }
 
+    private bool IsGamePaused()
+    {
+        return PauseManager.Instance != null && PauseManager.Instance.IsPaused;
     }
 
     private void OnMove(InputValue inputValue)
     {
+        if (IsGamePaused())
+        {
+            MovementInputVector = Vector2.zero;
+            DanceTriggered = false;
+            return;
+        }
+
         MovementInputVector = inputValue.Get<Vector2>();
         DanceTriggered = false;
     }
 
     private void OnLook(InputValue inputValue)
     {
+        if (IsGamePaused())
+        {
+            LookInputVector = Vector2.zero;
+            return;
+        }
+
         LookInputVector = inputValue.Get<Vector2>();
-        IsMouseLook = playerInput.currentControlScheme == mouseSchemeName;
+
+        if (playerInput != null)
+        {
+            IsMouseLook = playerInput.currentControlScheme == mouseSchemeName;
+        }
     }
 
     private void OnAttack(InputValue inputValue)
     {
-        if (inputValue.isPressed)
+        if (IsGamePaused())
         {
-            AttackTriggered = true;
-
-            GameObject projectileObj = Instantiate(capotePrefab);
-            Capote projectile = projectileObj.GetComponent<Capote>();
-
-            projectile.Init(
-                transform.position + transform.forward,
-                transform.forward,
-                playerController.projectileDamage * playerController.damageMultiplier
-            );
-
-            if (soundEffectPlayer != null)
-            {
-                soundEffectPlayer.PlaySound(SoundEffectType.Throw);
-            }
-
-            Destroy(projectileObj, 15f);
+            return;
         }
+
+        if (!inputValue.isPressed)
+        {
+            return;
+        }
+
+        AttackTriggered = true;
+
+        GameObject projectileObj = Instantiate(capotePrefab);
+        Capote projectile = projectileObj.GetComponent<Capote>();
+
+        projectile.Init(
+            transform.position + transform.forward,
+            transform.forward,
+            playerController.projectileDamage * playerController.damageMultiplier
+        );
+
+        if (soundEffectPlayer != null)
+        {
+            soundEffectPlayer.PlaySound(SoundEffectType.Throw);
+        }
+
+        Destroy(projectileObj, 15f);
     }
 
     private void OnDance(InputValue inputValue)
     {
+        if (IsGamePaused())
+        {
+            return;
+        }
+
         if (inputValue.isPressed && MovementInputVector.magnitude <= 0.01f)
         {
             DanceTriggered = true;
@@ -102,7 +136,12 @@ public class PlayerInputController : MonoBehaviour
 
     private void OnSwitchCam(InputValue inputValue)
     {
-        if (inputValue.isPressed)
+        if (IsGamePaused())
+        {
+            return;
+        }
+
+        if (inputValue.isPressed && switchCamera != null)
         {
             switchCamera.ManageCamera();
         }
@@ -110,6 +149,11 @@ public class PlayerInputController : MonoBehaviour
 
     private void OnNuke(InputValue inputValue)
     {
+        if (IsGamePaused())
+        {
+            return;
+        }
+
         if (!inputValue.isPressed)
         {
             return;
@@ -122,7 +166,11 @@ public class PlayerInputController : MonoBehaviour
 
         if (IsNukeOnCooldown)
         {
-            soundEffectPlayer.PlaySound(SoundEffectType.Error);
+            if (soundEffectPlayer != null)
+            {
+                soundEffectPlayer.PlaySound(SoundEffectType.Error);
+            }
+
             return;
         }
 
@@ -142,16 +190,43 @@ public class PlayerInputController : MonoBehaviour
 
     private void OnPlaceBarrier(InputValue inputValue)
     {
+        if (IsGamePaused())
+        {
+            return;
+        }
+
+        if (!inputValue.isPressed)
+        {
+            return;
+        }
+
         if (inventory == null || !inventory.HasItem("BodyPillow"))
         {
             return;
         }
+
         inventory.RemoveItemFromInventory("BodyPillow");
+
         Instantiate(pillowBarrierPrefab, transform.position, transform.rotation);
 
         if (soundEffectPlayer != null)
         {
             soundEffectPlayer.PlaySound(SoundEffectType.Yamete);
+        }
+    }
+
+    private void OnPause(InputValue inputValue)
+    {
+        if (!inputValue.isPressed)
+        {
+            return;
+        }
+
+        bool openedWithGamepad = playerInput != null && playerInput.currentControlScheme == "Gamepad";
+
+        if (PauseManager.Instance != null)
+        {
+            PauseManager.Instance.TogglePause(openedWithGamepad);
         }
     }
 }
