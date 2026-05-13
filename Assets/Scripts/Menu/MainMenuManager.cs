@@ -14,22 +14,25 @@ public class MainMenuManager : MonoBehaviour
     private TextMeshProUGUI highScore;
 
     [SerializeField]
-    private Button start, quit, shop, credits;
+    private Button start, quit, shop, credits, settings;
 
     [SerializeField]
-    private Button shopBackButton, creditsBackButton;
+    private Button shopBackButton, creditsBackButton, settingsBackButton;
 
     [SerializeField]
     private TextMeshProUGUI copyright, version, notEnough;
 
     [SerializeField]
-    private Image logo, creditsSheet, shopMenu;
+    private Image logo, creditsSheet, shopMenu, settingsMenu;
 
     [SerializeField]
     private GameObject chibrator;
 
     [SerializeField]
     private SoundEffectPlayer soundEffectPlayer;
+
+    [SerializeField]
+    private AudioSource audioSource;
 
     private void Awake()
     {
@@ -41,6 +44,11 @@ public class MainMenuManager : MonoBehaviour
         if (!PlayerPrefs.HasKey("HighScore"))
         {
             PlayerPrefs.SetInt("HighScore", 0);
+        }
+
+        if (PlayerPrefs.GetInt("isMenuMute") == 1)
+        {
+            audioSource.Stop();
         }
 
         PlayerPrefs.Save();
@@ -89,8 +97,10 @@ public class MainMenuManager : MonoBehaviour
         quit.gameObject.SetActive(false);
         shop.gameObject.SetActive(false);
         credits.gameObject.SetActive(false);
+        settings.gameObject.SetActive(false);
         creditsSheet.gameObject.SetActive(true);
         shopMenu.gameObject.SetActive(false);
+        settingsMenu.gameObject.SetActive(false);
 
         SelectButton(creditsBackButton);
         soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
@@ -108,10 +118,33 @@ public class MainMenuManager : MonoBehaviour
         quit.gameObject.SetActive(false);
         shop.gameObject.SetActive(false);
         credits.gameObject.SetActive(false);
+        settings.gameObject.SetActive(false);
         creditsSheet.gameObject.SetActive(false);
         shopMenu.gameObject.SetActive(true);
+        settingsMenu.gameObject.SetActive(false);
 
         SelectButton(shopBackButton);
+        soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
+    }
+
+    public void Settings()
+    {
+        lastScore.gameObject.SetActive(false);
+        highScore.gameObject.SetActive(false);
+        copyright.gameObject.SetActive(false);
+        version.gameObject.SetActive(false);
+        chibrator.SetActive(false);
+        logo.gameObject.SetActive(false);
+        start.gameObject.SetActive(false);
+        quit.gameObject.SetActive(false);
+        shop.gameObject.SetActive(false);
+        credits.gameObject.SetActive(false);
+        settings.gameObject.SetActive(false);
+        creditsSheet.gameObject.SetActive(false);
+        shopMenu.gameObject.SetActive(false);
+        settingsMenu.gameObject.SetActive(true);
+
+        SelectButton(settingsBackButton);
         soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
     }
 
@@ -127,9 +160,11 @@ public class MainMenuManager : MonoBehaviour
         quit.gameObject.SetActive(true);
         shop.gameObject.SetActive(true);
         credits.gameObject.SetActive(true);
+        settings.gameObject.SetActive(true);
         creditsSheet.gameObject.SetActive(false);
         shopMenu.gameObject.SetActive(false);
         notEnough.gameObject.SetActive(false);
+        settingsMenu.gameObject.SetActive(false);
 
         SelectButton(start);
     }

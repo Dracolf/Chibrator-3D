@@ -13,15 +13,23 @@ public class PauseManager : MonoBehaviour
     private GameObject pauseMenu;
 
     [SerializeField]
+    private GameObject settingsMenu;
+
+    [SerializeField]
     private GameObject gui;
 
     [Header("Gamepad Navigation")]
     [SerializeField]
     private GameObject firstSelectedButton;
 
+    [SerializeField]
+    private GameObject settingsBackButton;
+
     public bool IsPaused { get; private set; }
 
     private readonly List<Gamepad> disabledGamepads = new List<Gamepad>();
+
+    private bool pauseOpenedWithGamepad;
 
     private void Awake()
     {
@@ -31,6 +39,12 @@ public class PauseManager : MonoBehaviour
     private void Start()
     {
         pauseMenu.SetActive(false);
+
+        if (settingsMenu != null)
+        {
+            settingsMenu.SetActive(false);
+        }
+
         gui.SetActive(true);
 
         Time.timeScale = 1f;
@@ -54,7 +68,6 @@ public class PauseManager : MonoBehaviour
         }
     }
 
-    // Surcharge pratique si jamais tu veux appeler TogglePause depuis un bouton ou un autre script.
     public void TogglePause()
     {
         TogglePause(false);
@@ -63,8 +76,15 @@ public class PauseManager : MonoBehaviour
     public void PauseGame(bool openedWithGamepad)
     {
         IsPaused = true;
+        pauseOpenedWithGamepad = openedWithGamepad;
 
         pauseMenu.SetActive(true);
+
+        if (settingsMenu != null)
+        {
+            settingsMenu.SetActive(false);
+        }
+
         gui.SetActive(false);
 
         Time.timeScale = 0f;
@@ -72,10 +92,10 @@ public class PauseManager : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
 
-        if (openedWithGamepad)
+        if (pauseOpenedWithGamepad)
         {
             Cursor.visible = false;
-            SelectFirstButton();
+            SelectButton(firstSelectedButton);
         }
         else
         {
@@ -92,6 +112,12 @@ public class PauseManager : MonoBehaviour
         EnableGamepadsAfterPause();
 
         pauseMenu.SetActive(false);
+
+        if (settingsMenu != null)
+        {
+            settingsMenu.SetActive(false);
+        }
+
         gui.SetActive(true);
 
         Time.timeScale = 1f;
@@ -101,6 +127,44 @@ public class PauseManager : MonoBehaviour
         Cursor.visible = false;
 
         ClearSelectedButton();
+    }
+
+    public void OpenSettingsMenu()
+    {
+        pauseMenu.SetActive(false);
+
+        if (settingsMenu != null)
+        {
+            settingsMenu.SetActive(true);
+        }
+
+        if (pauseOpenedWithGamepad)
+        {
+            SelectButton(settingsBackButton);
+        }
+        else
+        {
+            ClearSelectedButton();
+        }
+    }
+
+    public void BackToPauseMenu()
+    {
+        if (settingsMenu != null)
+        {
+            settingsMenu.SetActive(false);
+        }
+
+        pauseMenu.SetActive(true);
+
+        if (pauseOpenedWithGamepad)
+        {
+            SelectButton(firstSelectedButton);
+        }
+        else
+        {
+            ClearSelectedButton();
+        }
     }
 
     public void BackToMenu()
@@ -120,15 +184,15 @@ public class PauseManager : MonoBehaviour
         SceneManager.LoadScene("Menu");
     }
 
-    private void SelectFirstButton()
+    private void SelectButton(GameObject buttonToSelect)
     {
-        if (EventSystem.current == null || firstSelectedButton == null)
+        if (EventSystem.current == null || buttonToSelect == null)
         {
             return;
         }
 
         EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(firstSelectedButton);
+        EventSystem.current.SetSelectedGameObject(buttonToSelect);
     }
 
     private void ClearSelectedButton()
