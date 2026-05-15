@@ -90,6 +90,11 @@ public class ZiziController : MonoBehaviour
         {
             Score score = FindAnyObjectByType<Score>();
             score.IncreaseScore(20);
+            int nbZiziKills = PlayerPrefs.GetInt("zizisKilled");
+            int nbEnemyKills = PlayerPrefs.GetInt("enemiesKilled");
+            PlayerPrefs.SetInt("zizisKilled", nbZiziKills + 1);
+            PlayerPrefs.SetInt("enemiesKilled", nbEnemyKills + 1);
+            PlayerPrefs.Save();
 
             if (score.score % 200 == 0)
             {

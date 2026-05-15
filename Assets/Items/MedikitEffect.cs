@@ -22,6 +22,9 @@ public class MedikitEffect : MonoBehaviour
                 soundEffectPlayer.PlaySound(SoundEffectType.Medikit);
             }
 
+            int nbItemsCollections = PlayerPrefs.GetInt("itemsCollected");
+            PlayerPrefs.SetInt("itemsCollected", nbItemsCollections + 1);
+
             Destroy(gameObject);
         }
     }

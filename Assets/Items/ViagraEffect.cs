@@ -27,6 +27,9 @@ public class ViagraEffect : MonoBehaviour
                 soundEffectPlayer.PlaySound(SoundEffectType.Viagra);
             }
 
+            int nbItemsCollections = PlayerPrefs.GetInt("itemsCollected");
+            PlayerPrefs.SetInt("itemsCollected", nbItemsCollections + 1);
+
             Destroy(gameObject);
         }
     }

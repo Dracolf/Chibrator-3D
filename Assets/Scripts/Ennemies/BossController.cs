@@ -86,6 +86,11 @@ public class BossController : MonoBehaviour
         {
             Score score = FindAnyObjectByType<Score>();
             score.IncreaseScore(100);
+            int nbBossKills = PlayerPrefs.GetInt("bossKilled");
+            int nbEnemyKills = PlayerPrefs.GetInt("enemiesKilled");
+            PlayerPrefs.SetInt("bossKilled", nbBossKills + 1);
+            PlayerPrefs.SetInt("enemiesKilled", nbEnemyKills + 1);
+            PlayerPrefs.Save();
 
             if (score.score % 200 == 0)
             {

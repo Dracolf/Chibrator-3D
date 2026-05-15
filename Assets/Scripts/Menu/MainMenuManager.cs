@@ -14,16 +14,16 @@ public class MainMenuManager : MonoBehaviour
     private TextMeshProUGUI highScore;
 
     [SerializeField]
-    private Button start, quit, shop, credits, settings;
+    private Button start, quit, shop, credits, settings, leaderboard, stats;
 
     [SerializeField]
-    private Button shopBackButton, creditsBackButton, settingsBackButton;
+    private Button shopBackButton, creditsBackButton, settingsBackButton, leaderboardBackButton, statsBackButton;
 
     [SerializeField]
     private TextMeshProUGUI copyright, version, notEnough;
 
     [SerializeField]
-    private Image logo, creditsSheet, shopMenu, settingsMenu;
+    private Image logo, creditsSheet, shopMenu, settingsMenu, leaderboardSheet, statsSheet;
 
     [SerializeField]
     private GameObject chibrator;
@@ -98,9 +98,13 @@ public class MainMenuManager : MonoBehaviour
         shop.gameObject.SetActive(false);
         credits.gameObject.SetActive(false);
         settings.gameObject.SetActive(false);
+        leaderboard.gameObject.SetActive(false);
+        stats.gameObject.SetActive(false);
         creditsSheet.gameObject.SetActive(true);
         shopMenu.gameObject.SetActive(false);
         settingsMenu.gameObject.SetActive(false);
+        leaderboardSheet.gameObject.SetActive(false);
+        statsSheet.gameObject.SetActive(false);
 
         SelectButton(creditsBackButton);
         soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
@@ -119,9 +123,13 @@ public class MainMenuManager : MonoBehaviour
         shop.gameObject.SetActive(false);
         credits.gameObject.SetActive(false);
         settings.gameObject.SetActive(false);
+        leaderboard.gameObject.SetActive(false);
+        stats.gameObject.SetActive(false);
         creditsSheet.gameObject.SetActive(false);
         shopMenu.gameObject.SetActive(true);
         settingsMenu.gameObject.SetActive(false);
+        leaderboardSheet.gameObject.SetActive(false);
+        statsSheet.gameObject.SetActive(false);
 
         SelectButton(shopBackButton);
         soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
@@ -140,11 +148,65 @@ public class MainMenuManager : MonoBehaviour
         shop.gameObject.SetActive(false);
         credits.gameObject.SetActive(false);
         settings.gameObject.SetActive(false);
+        leaderboard.gameObject.SetActive(false);
+        stats.gameObject.SetActive(false);
         creditsSheet.gameObject.SetActive(false);
         shopMenu.gameObject.SetActive(false);
         settingsMenu.gameObject.SetActive(true);
+        leaderboardSheet.gameObject.SetActive(false);
+        statsSheet.gameObject.SetActive(false);
 
         SelectButton(settingsBackButton);
+        soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
+    }
+
+    public void Leaderboard()
+    {
+        lastScore.gameObject.SetActive(false);
+        highScore.gameObject.SetActive(false);
+        copyright.gameObject.SetActive(false);
+        version.gameObject.SetActive(false);
+        chibrator.SetActive(false);
+        logo.gameObject.SetActive(false);
+        start.gameObject.SetActive(false);
+        quit.gameObject.SetActive(false);
+        shop.gameObject.SetActive(false);
+        credits.gameObject.SetActive(false);
+        settings.gameObject.SetActive(false);
+        leaderboard.gameObject.SetActive(false);
+        stats.gameObject.SetActive(false);
+        creditsSheet.gameObject.SetActive(false);
+        shopMenu.gameObject.SetActive(false);
+        settingsMenu.gameObject.SetActive(false);
+        leaderboardSheet.gameObject.SetActive(true);
+        statsSheet.gameObject.SetActive(false);
+
+        SelectButton(leaderboardBackButton);
+        soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
+    }
+
+    public void Stats()
+    {
+        lastScore.gameObject.SetActive(false);
+        highScore.gameObject.SetActive(false);
+        copyright.gameObject.SetActive(false);
+        version.gameObject.SetActive(false);
+        chibrator.SetActive(false);
+        logo.gameObject.SetActive(false);
+        start.gameObject.SetActive(false);
+        quit.gameObject.SetActive(false);
+        shop.gameObject.SetActive(false);
+        credits.gameObject.SetActive(false);
+        settings.gameObject.SetActive(false);
+        leaderboard.gameObject.SetActive(false);
+        stats.gameObject.SetActive(false);
+        creditsSheet.gameObject.SetActive(false);
+        shopMenu.gameObject.SetActive(false);
+        settingsMenu.gameObject.SetActive(false);
+        leaderboardSheet.gameObject.SetActive(true);
+        statsSheet.gameObject.SetActive(true);
+
+        SelectButton(statsBackButton);
         soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
     }
 
@@ -161,10 +223,14 @@ public class MainMenuManager : MonoBehaviour
         shop.gameObject.SetActive(true);
         credits.gameObject.SetActive(true);
         settings.gameObject.SetActive(true);
+        leaderboard.gameObject.SetActive(true);
+        stats.gameObject.SetActive(true);
         creditsSheet.gameObject.SetActive(false);
         shopMenu.gameObject.SetActive(false);
         notEnough.gameObject.SetActive(false);
         settingsMenu.gameObject.SetActive(false);
+        leaderboardSheet.gameObject.SetActive(false);
+        statsSheet.gameObject.SetActive(false);
 
         SelectButton(start);
     }

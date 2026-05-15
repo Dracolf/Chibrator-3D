@@ -27,6 +27,9 @@ public class LubrifiantEffect : MonoBehaviour
                 soundEffectPlayer.PlaySound(SoundEffectType.Lubrifiant);
             }
 
+            int nbItemsCollections = PlayerPrefs.GetInt("itemsCollected");
+            PlayerPrefs.SetInt("itemsCollected", nbItemsCollections + 1);
+
             Destroy(gameObject);
         }
     }

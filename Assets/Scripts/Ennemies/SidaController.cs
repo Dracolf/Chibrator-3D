@@ -42,6 +42,8 @@ public class SidaController : MonoBehaviour
         if (playerController != null)
         {
             playerController.ChangeHealth(-damage);
+            int nbSidaInfections = PlayerPrefs.GetInt("sidaInfections");
+            PlayerPrefs.SetInt("sidaInfections", nbSidaInfections + 1);
             Destroy(gameObject);
             return;
         }

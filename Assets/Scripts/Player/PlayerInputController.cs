@@ -176,6 +176,8 @@ public class PlayerInputController : MonoBehaviour
 
         inventory.RemoveItemFromInventory("Nuke");
         nextNukeAvailableTime = Time.unscaledTime + nukeCooldownDuration;
+        int nbNukeUses = PlayerPrefs.GetInt("nukesUsed");
+        PlayerPrefs.SetInt("nukesUsed", nbNukeUses + 1);
 
         if (soundEffectPlayer != null)
         {
@@ -206,6 +208,8 @@ public class PlayerInputController : MonoBehaviour
         }
 
         inventory.RemoveItemFromInventory("BodyPillow");
+        int nbPillowUses = PlayerPrefs.GetInt("pillowsUsed");
+        PlayerPrefs.SetInt("pillowsUsed", nbPillowUses + 1);
 
         Instantiate(pillowBarrierPrefab, transform.position, transform.rotation);
 
@@ -226,6 +230,7 @@ public class PlayerInputController : MonoBehaviour
 
         if (PauseManager.Instance != null)
         {
+            PauseManager.Instance.BackToPauseMenu();
             PauseManager.Instance.TogglePause(openedWithGamepad);
         }
     }

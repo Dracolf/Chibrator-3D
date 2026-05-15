@@ -13,7 +13,7 @@ public class PauseManager : MonoBehaviour
     private GameObject pauseMenu;
 
     [SerializeField]
-    private GameObject settingsMenu;
+    private GameObject settingsMenu, controlsMenu;
 
     [SerializeField]
     private GameObject gui;
@@ -23,13 +23,15 @@ public class PauseManager : MonoBehaviour
     private GameObject firstSelectedButton;
 
     [SerializeField]
-    private GameObject settingsBackButton;
+    private GameObject settingsBackButton, controlsBackButton;
 
     public bool IsPaused { get; private set; }
 
     private readonly List<Gamepad> disabledGamepads = new List<Gamepad>();
 
     private bool pauseOpenedWithGamepad;
+
+    private SoundEffectPlayer soundEffectPlayer;
 
     private void Awake()
     {
@@ -53,11 +55,14 @@ public class PauseManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        soundEffectPlayer = FindAnyObjectByType<SoundEffectPlayer>();
+
         ClearSelectedButton();
     }
 
     public void TogglePause(bool openedWithGamepad)
     {
+        soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
         if (IsPaused)
         {
             ResumeGame();
@@ -127,6 +132,8 @@ public class PauseManager : MonoBehaviour
         Cursor.visible = false;
 
         ClearSelectedButton();
+
+        soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
     }
 
     public void OpenSettingsMenu()
@@ -146,6 +153,29 @@ public class PauseManager : MonoBehaviour
         {
             ClearSelectedButton();
         }
+
+        soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
+    }
+
+    public void OpenControlsMenu()
+    {
+        pauseMenu.SetActive(false);
+
+        if (controlsMenu != null)
+        {
+            controlsMenu.SetActive(true);
+        }
+
+        if (pauseOpenedWithGamepad)
+        {
+            SelectButton(controlsBackButton);
+        }
+        else
+        {
+            ClearSelectedButton();
+        }
+
+        soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
     }
 
     public void BackToPauseMenu()
@@ -153,6 +183,10 @@ public class PauseManager : MonoBehaviour
         if (settingsMenu != null)
         {
             settingsMenu.SetActive(false);
+        }
+        if (controlsMenu != null)
+        {
+            controlsMenu.SetActive(false);
         }
 
         pauseMenu.SetActive(true);
@@ -182,6 +216,7 @@ public class PauseManager : MonoBehaviour
         ClearSelectedButton();
 
         SceneManager.LoadScene("Menu");
+        soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
     }
 
     private void SelectButton(GameObject buttonToSelect)

@@ -12,6 +12,8 @@ public class BodyPillow : MonoBehaviour
         {
             inventory.AddItemToInventory("BodyPillow");
             soundEffectPlayer.PlaySound(SoundEffectType.ItemCollect);
+            int nbItemsCollections = PlayerPrefs.GetInt("itemsCollected");
+            PlayerPrefs.SetInt("itemsCollected", nbItemsCollections + 1);
             Destroy(gameObject);
         }
     }

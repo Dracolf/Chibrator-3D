@@ -12,6 +12,8 @@ public class Nuke : MonoBehaviour
         {
             inventory.AddItemToInventory("Nuke");
             soundEffectPlayer.PlaySound(SoundEffectType.ItemCollect);
+            int nbItemsCollections = PlayerPrefs.GetInt("itemsCollected");
+            PlayerPrefs.SetInt("itemsCollected", nbItemsCollections + 1);
             Destroy(gameObject);
         }
     }

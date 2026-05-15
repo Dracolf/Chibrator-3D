@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -60,6 +61,10 @@ public class PlayerController : MonoBehaviour
 
     private float lastDamageTime;
 
+    private bool isDead;
+
+    private float currentGamePlayTime;
+
     private void Awake()
     {
         playerInputController = GetComponent<PlayerInputController>();
@@ -79,11 +84,18 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (isDead)
+        {
+            return;
+        }
+
         if (IsGamePaused())
         {
             StopGameplaySounds();
             return;
         }
+
+        currentGamePlayTime += Time.deltaTime;
 
         HandleLook();
         HandleMovement();
@@ -162,8 +174,13 @@ public class PlayerController : MonoBehaviour
         transform.position = nextPosition;
     }
 
-    public void ChangeHealth(float amount)
+    public void ChangeHealth(float amount, float deathSceneDelay = 0f)
     {
+        if (isDead)
+        {
+            return;
+        }
+
         if (amount < 0f && cameraEffects != null)
         {
             lastDamageTime = Time.time;
@@ -185,11 +202,22 @@ public class PlayerController : MonoBehaviour
 
         if (currentHealth <= 0f)
         {
-            Die();
+            Die(deathSceneDelay);
         }
     }
 
-    private void Die()
+    private void Die(float deathSceneDelay = 0f)
+    {
+        if (isDead)
+        {
+            return;
+        }
+
+        isDead = true;
+        StartCoroutine(DieRoutine(deathSceneDelay));
+    }
+
+    private IEnumerator DieRoutine(float deathSceneDelay)
     {
         StopGameplaySounds();
 
@@ -203,25 +231,81 @@ public class PlayerController : MonoBehaviour
         }
 
         int currentMoney = PlayerPrefs.GetInt("money");
+        int nbGames = PlayerPrefs.GetInt("gamesPlayed");
+        int totalScore = PlayerPrefs.GetInt("totalScore");
+        int totalPlayTimeSeconds = PlayerPrefs.GetInt("totalPlayTimeSeconds", 0);
+        int currentGameSeconds = Mathf.FloorToInt(currentGamePlayTime);
 
         PlayerPrefs.SetInt("LastScore", finalScore);
         PlayerPrefs.SetInt("money", currentMoney + finalScore);
+        PlayerPrefs.SetInt("totalPlayTimeSeconds", totalPlayTimeSeconds + currentGameSeconds);
 
-        if (finalScore > PlayerPrefs.GetInt("HighScore", 0))
+        bool isNewHighScore = finalScore > PlayerPrefs.GetInt("HighScore", 0);
+
+        if (isNewHighScore)
         {
             PlayerPrefs.SetInt("HighScore", finalScore);
         }
 
         PlayerPrefs.SetInt("nukeAmount", 0);
         PlayerPrefs.SetInt("pillowAmount", 0);
+        PlayerPrefs.SetInt("gamesPlayed", nbGames + 1);
+        PlayerPrefs.SetInt("totalScore", totalScore + finalScore);
 
         PlayerPrefs.Save();
+
+        if (isNewHighScore)
+        {
+            ChibratorApiClient apiClient = FindAnyObjectByType<ChibratorApiClient>();
+
+            if (apiClient == null)
+            {
+                Debug.LogError("Impossible d'envoyer le score : aucun ChibratorApiClient trouvé dans la scène.");
+            }
+            else
+            {
+                bool requestFinished = false;
+
+                string pseudo = PlayerPrefs.GetString("Pseudo", "").Trim();
+
+                if (string.IsNullOrWhiteSpace(pseudo))
+                {
+                    pseudo = "Joueur";
+                }
+
+                Debug.Log($"Envoi du score API : {pseudo} ({finalScore})");
+
+                apiClient.AddOrUpdatePlayerScore(pseudo, finalScore, (success, response) =>
+                {
+                    requestFinished = true;
+
+                    if (success)
+                    {
+                        Debug.Log("Score envoyé : " + response);
+                    }
+                    else
+                    {
+                        Debug.LogError("Erreur envoi score : " + response);
+                    }
+                });
+
+                while (!requestFinished)
+                {
+                    yield return null;
+                }
+            }
+        }
 
         Time.timeScale = 1f;
         AudioListener.pause = false;
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        if (deathSceneDelay > 0f)
+        {
+            yield return new WaitForSecondsRealtime(deathSceneDelay);
+        }
 
         SceneManager.LoadScene("Menu");
     }
