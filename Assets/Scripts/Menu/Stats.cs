@@ -16,7 +16,8 @@ public class Stats : MonoBehaviour
                     + "Terroristes tués : " + PlayerPrefs.GetInt("terroristsKilled") + "\n"
                     + "Boss tués : " + PlayerPrefs.GetInt("bossKilled") + "\n";
 
-        statsText2.text = "Items récupérés : " + PlayerPrefs.GetInt("itemsCollected") + "\n"
+        statsText2.text = "Rastas tués : " + PlayerPrefs.GetInt("rastasKilled") + "\n"
+                    + "Items récupérés : " + PlayerPrefs.GetInt("itemsCollected") + "\n"
                     + "Nukes utilisées : " + PlayerPrefs.GetInt("nukesUsed") + "\n"
                     + "Body Pillows utilisés : " + PlayerPrefs.GetInt("pillowsUsed") + "\n"
                     + "Infections au Sida : " + PlayerPrefs.GetInt("sidaInfections") + "\n";

@@ -114,6 +114,11 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        if (RastaCameraManager.Instance != null && RastaCameraManager.Instance.IsLockedOnRasta)
+        {
+            return;
+        }
+
         Vector2 lookInput = playerInputController.LookInputVector;
 
         float yaw;

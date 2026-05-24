@@ -13,6 +13,10 @@ public class SwitchCamera : MonoBehaviour
 
     public void ManageCamera()
     {
+        if (RastaCameraManager.Instance != null && RastaCameraManager.Instance.IsLockedOnRasta)
+        {
+            return;
+        }
         if (manager == 0)
         {
             PovCam();

@@ -31,16 +31,19 @@ public class ItemDrop : MonoBehaviour
     private float itemLifetime = 120f;
 
     private PlayerController playerController;
+    private RastaSpawner rastaSpawner;
 
     private void Awake()
     {
         playerController = FindAnyObjectByType<PlayerController>();
+        rastaSpawner = FindAnyObjectByType<RastaSpawner>();
     }
 
     public void TryDropBonus()
     {
         if (Random.value > dropChance)
         {
+            rastaSpawner.SpawnRasta();
             return;
         }
 

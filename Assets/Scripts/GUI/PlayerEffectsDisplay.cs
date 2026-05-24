@@ -62,6 +62,9 @@ public class PlayerEffectsDisplay : MonoBehaviour
             case PlayerEffects.EffectType.DamageMultiplier:
                 return "Dégâts x2";
 
+            case PlayerEffects.EffectType.Cannabis:
+                return "Cannabis";
+
             default:
                 return "Effet";
         }
@@ -76,6 +79,9 @@ public class PlayerEffectsDisplay : MonoBehaviour
 
             case PlayerEffects.EffectType.DamageMultiplier:
                 return "💥";
+
+            case PlayerEffects.EffectType.Cannabis:
+                return "☘";
 
             default:
                 return "●";

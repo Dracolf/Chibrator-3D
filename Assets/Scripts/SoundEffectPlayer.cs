@@ -21,7 +21,9 @@ public enum SoundEffectType
     BossHit,
     SoftProut,
     Buy,
-    Error
+    Error,
+    OneLove,
+    Bomboclaat
 }
 
 public class SoundEffectPlayer : MonoBehaviour
@@ -110,7 +112,7 @@ public class SoundEffectPlayer : MonoBehaviour
             return 1.5f;
         }
 
-        if (soundType == SoundEffectType.Error)
+        if (soundType == SoundEffectType.Error || soundType == SoundEffectType.OneLove)
         {
             return 2f;
         }

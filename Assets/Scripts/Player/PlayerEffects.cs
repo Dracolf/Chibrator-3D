@@ -7,12 +7,14 @@ public class PlayerEffects : MonoBehaviour
     public enum EffectType
     {
         SpeedMultiplier,
-        DamageMultiplier
+        DamageMultiplier,
+        Cannabis
     }
 
     public IReadOnlyDictionary<string, EffectData> ActiveEffectData => activeEffectData;
 
     private PlayerController playerController;
+    private CameraEffects cameraEffects;
 
     private readonly Dictionary<string, Coroutine> activeEffects = new();
     private readonly Dictionary<string, EffectData> activeEffectData = new();
@@ -20,6 +22,7 @@ public class PlayerEffects : MonoBehaviour
     private void Awake()
     {
         playerController = GetComponent<PlayerController>();
+        cameraEffects = FindAnyObjectByType<CameraEffects>();
     }
 
     public void ApplyTimedEffect(string effectId, EffectType effectType, float value, float duration)
@@ -63,6 +66,13 @@ public class PlayerEffects : MonoBehaviour
             case EffectType.DamageMultiplier:
                 playerController.damageMultiplier *= effectData.Value;
                 break;
+
+            case EffectType.Cannabis:
+                if (cameraEffects != null)
+                {
+                    cameraEffects.PlayCannabisEffect(effectData.Duration);
+                }
+                break;
         }
     }
 
@@ -76,6 +86,10 @@ public class PlayerEffects : MonoBehaviour
 
             case EffectType.DamageMultiplier:
                 playerController.damageMultiplier /= effectData.Value;
+                break;
+
+            case EffectType.Cannabis:
+                // Rien à faire ici : CameraEffects remet déjà l'écran normal à la fin.
                 break;
         }
     }

@@ -24,6 +24,7 @@ public class PlayerInputController : MonoBehaviour
     private PlayerController playerController;
     private NukeCinematicManager nukeCinematicManager;
     private Inventory inventory;
+    private PlayerEffects playerEffects;
 
     [Header("Nuke Cooldown")]
     [SerializeField]
@@ -44,6 +45,7 @@ public class PlayerInputController : MonoBehaviour
         playerController = GetComponent<PlayerController>();
         nukeCinematicManager = FindAnyObjectByType<NukeCinematicManager>();
         inventory = GetComponent<Inventory>();
+        playerEffects = GetComponent<PlayerEffects>();
     }
 
     private bool IsGamePaused()
@@ -61,6 +63,12 @@ public class PlayerInputController : MonoBehaviour
         }
 
         MovementInputVector = inputValue.Get<Vector2>();
+
+        if (playerEffects != null && playerEffects.HasActiveEffect("Cannabis"))
+        {
+            MovementInputVector = -MovementInputVector;
+        }
+
         DanceTriggered = false;
     }
 
@@ -73,6 +81,11 @@ public class PlayerInputController : MonoBehaviour
         }
 
         LookInputVector = inputValue.Get<Vector2>();
+
+        if (playerEffects != null && playerEffects.HasActiveEffect("Cannabis"))
+        {
+            LookInputVector = -LookInputVector;
+        }
 
         if (playerInput != null)
         {

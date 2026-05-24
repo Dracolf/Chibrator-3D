@@ -24,9 +24,37 @@ public class CameraEffects : MonoBehaviour
     [SerializeField]
     private float damageFlashFadeDuration = 0.35f;
 
+    [Header("Cannabis Effect")]
+    [SerializeField]
+    private Image cannabisOverlay;
+
+    [SerializeField]
+    private float cannabisOverlayAlpha = 0.25f;
+
+    [SerializeField]
+    private float cannabisFadeDuration = 0.75f;
+
+    [SerializeField]
+    private float cannabisWobblePositionStrength = 0.08f;
+
+    [SerializeField]
+    private float cannabisWobbleRotationStrength = 2.5f;
+
+    [SerializeField]
+    private float cannabisWobbleSpeed = 3f;
+
+    [SerializeField]
+    private AudioSource audioSource;
+
+    [SerializeField]
+    private AudioClip baseMusic, fayaGanjah;
+
     private Vector3 originalLocalPosition;
+    private Quaternion originalLocalRotation;
+
     private Coroutine shakeCoroutine;
     private Coroutine damageFlashCoroutine;
+    private Coroutine cannabisCoroutine;
 
     private void Awake()
     {
@@ -36,10 +64,16 @@ public class CameraEffects : MonoBehaviour
         }
 
         originalLocalPosition = shakeTarget.localPosition;
+        originalLocalRotation = shakeTarget.localRotation;
 
         if (damageOverlay != null)
         {
-            SetDamageOverlayAlpha(0f);
+            SetImageAlpha(damageOverlay, 0f);
+        }
+
+        if (cannabisOverlay != null)
+        {
+            SetImageAlpha(cannabisOverlay, 0f);
         }
     }
 
@@ -79,6 +113,22 @@ public class CameraEffects : MonoBehaviour
         damageFlashCoroutine = StartCoroutine(DamageFlashRoutine());
     }
 
+    public void PlayCannabisEffect(float duration = 25f)
+    {
+        if (shakeTarget == null)
+        {
+            return;
+        }
+
+        if (cannabisCoroutine != null)
+        {
+            StopCoroutine(cannabisCoroutine);
+            ResetCannabisEffect();
+        }
+
+        cannabisCoroutine = StartCoroutine(CannabisRoutine(duration));
+    }
+
     private IEnumerator ShakeRoutine(float duration, float strength)
     {
         float elapsedTime = 0f;
@@ -102,7 +152,7 @@ public class CameraEffects : MonoBehaviour
     {
         float elapsedTime = 0f;
 
-        SetDamageOverlayAlpha(damageFlashAlpha);
+        SetImageAlpha(damageOverlay, damageFlashAlpha);
 
         while (elapsedTime < damageFlashFadeDuration)
         {
@@ -114,19 +164,114 @@ public class CameraEffects : MonoBehaviour
                 elapsedTime / damageFlashFadeDuration
             );
 
-            SetDamageOverlayAlpha(alpha);
+            SetImageAlpha(damageOverlay, alpha);
 
             yield return null;
         }
 
-        SetDamageOverlayAlpha(0f);
+        SetImageAlpha(damageOverlay, 0f);
         damageFlashCoroutine = null;
     }
 
-    private void SetDamageOverlayAlpha(float alpha)
+    private IEnumerator CannabisRoutine(float duration)
     {
-        Color color = damageOverlay.color;
+        audioSource.clip = fayaGanjah;
+        audioSource.Play();
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < cannabisFadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+
+            float alpha = Mathf.Lerp(
+                0f,
+                cannabisOverlayAlpha,
+                elapsedTime / cannabisFadeDuration
+            );
+
+            SetImageAlpha(cannabisOverlay, alpha);
+
+            yield return null;
+        }
+
+        elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+
+            float wave = Mathf.Sin(Time.time * cannabisWobbleSpeed);
+            float secondWave = Mathf.Sin(Time.time * cannabisWobbleSpeed * 1.7f);
+
+            Vector3 wobbleOffset = new Vector3(
+                wave * cannabisWobblePositionStrength,
+                secondWave * cannabisWobblePositionStrength,
+                0f
+            );
+
+            Quaternion wobbleRotation = Quaternion.Euler(
+                secondWave * cannabisWobbleRotationStrength,
+                wave * cannabisWobbleRotationStrength,
+                wave * cannabisWobbleRotationStrength
+            );
+
+            shakeTarget.localPosition = originalLocalPosition + wobbleOffset;
+            shakeTarget.localRotation = originalLocalRotation * wobbleRotation;
+
+            yield return null;
+        }
+
+        elapsedTime = 0f;
+
+        Vector3 startPosition = shakeTarget.localPosition;
+        Quaternion startRotation = shakeTarget.localRotation;
+
+        while (elapsedTime < cannabisFadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+
+            float t = elapsedTime / cannabisFadeDuration;
+
+            shakeTarget.localPosition = Vector3.Lerp(startPosition, originalLocalPosition, t);
+            shakeTarget.localRotation = Quaternion.Slerp(startRotation, originalLocalRotation, t);
+
+            float alpha = Mathf.Lerp(cannabisOverlayAlpha, 0f, t);
+            SetImageAlpha(cannabisOverlay, alpha);
+
+            yield return null;
+        }
+
+        ResetCannabisEffect();
+        cannabisCoroutine = null;
+    }
+
+    private void ResetCannabisEffect()
+    {
+        audioSource.clip = baseMusic;
+        audioSource.Play();
+        
+        if (shakeTarget != null)
+        {
+            shakeTarget.localPosition = originalLocalPosition;
+            shakeTarget.localRotation = originalLocalRotation;
+        }
+
+        if (cannabisOverlay != null)
+        {
+            SetImageAlpha(cannabisOverlay, 0f);
+        }
+    }
+
+    private void SetImageAlpha(Image image, float alpha)
+    {
+        if (image == null)
+        {
+            return;
+        }
+
+        Color color = image.color;
         color.a = alpha;
-        damageOverlay.color = color;
+        image.color = color;
     }
 }

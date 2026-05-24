@@ -46,6 +46,11 @@ public class MainMenuManager : MonoBehaviour
             PlayerPrefs.SetInt("HighScore", 0);
         }
 
+        if (!PlayerPrefs.HasKey("GlobalVolume"))
+        {
+            PlayerPrefs.SetFloat("GlobalVolume", 1f);
+        }
+
         if (PlayerPrefs.GetInt("isMenuMute") == 1)
         {
             audioSource.Stop();
@@ -55,6 +60,7 @@ public class MainMenuManager : MonoBehaviour
 
         lastScore.text = "Last score : " + PlayerPrefs.GetInt("LastScore");
         highScore.text = "Highscore : " + PlayerPrefs.GetInt("HighScore");
+        AudioListener.volume = PlayerPrefs.GetFloat("GlobalVolume");
 
         BackToMainMenu();
 

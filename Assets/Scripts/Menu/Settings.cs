@@ -11,6 +11,8 @@ public class Settings : MonoBehaviour
     private bool isMenuMute, isGameMute;
     [SerializeField]
     private AudioSource audioSource;
+    [SerializeField]
+    private Slider slider;
     private string sceneName;
 
     void Start()
@@ -30,6 +32,8 @@ public class Settings : MonoBehaviour
 
         muteMenuMusic.image.sprite = isMenuMute ? unmute : mute;
         muteGameMusic.image.sprite = isGameMute ? unmute : mute;
+
+        slider.value = PlayerPrefs.GetFloat("GlobalVolume");
 
         sceneName = SceneManager.GetActiveScene().name;
     }
@@ -82,5 +86,12 @@ public class Settings : MonoBehaviour
             PlayerPrefs.SetInt("isGameMute", 0);
             PlayerPrefs.Save();
         }
+    }
+
+    public void SetGlobalVolume(float value)
+    {
+        AudioListener.volume = value;
+        PlayerPrefs.SetFloat("GlobalVolume", value);
+        PlayerPrefs.Save();
     }
 }

@@ -30,6 +30,7 @@ public class Capote : MonoBehaviour
         ZiziController zizi = other.GetComponent<ZiziController>();
         BossController boss = other.GetComponent<BossController>();
         TerroristeController terroriste = other.GetComponent<TerroristeController>();
+        RastaController rasta = other.GetComponent<RastaController>();
 
         if (zizi != null)
         {
@@ -46,6 +47,12 @@ public class Capote : MonoBehaviour
         if (terroriste != null)
         {
             terroriste.TakeDamage(damages);
+            Destroy(gameObject);
+        }
+
+        if (rasta != null)
+        {
+            rasta.TakeDamage(damages);
             Destroy(gameObject);
         }
     }
