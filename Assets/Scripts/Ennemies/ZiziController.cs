@@ -18,12 +18,8 @@ public class ZiziController : MonoBehaviour
 
     private void Start()
     {
-        PlayerController player = FindAnyObjectByType<PlayerController>();
         soundEffectPlayer = FindAnyObjectByType<SoundEffectPlayer>();
-        if (player != null)
-        {
-            target = player.transform;
-        }
+        RefreshTarget();
 
         speed = Random.Range(_avgSpeed - 1, _avgSpeed + 2);
 
@@ -64,6 +60,7 @@ public class ZiziController : MonoBehaviour
     {
         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
         BodyPillowController bodyPillow = collision.gameObject.GetComponent<BodyPillowController>();
+        LeurreController leurre = collision.gameObject.GetComponent<LeurreController>();
 
         if (player != null)
         {
@@ -72,6 +69,10 @@ public class ZiziController : MonoBehaviour
         if (bodyPillow != null)
         {
             bodyPillow.TakeDamage(1f);
+        }
+        if (leurre != null)
+        {
+            leurre.TakeDamage(1f);
         }
     }
 
@@ -116,5 +117,10 @@ public class ZiziController : MonoBehaviour
             soundEffectPlayer.PlaySound(SoundEffectType.ZiziDeath);
             Destroy(gameObject);
         }
+    }
+
+    public void RefreshTarget()
+    {
+        target = LeurreController.GetCurrentTarget();
     }
 }

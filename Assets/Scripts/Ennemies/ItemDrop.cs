@@ -4,7 +4,7 @@ public class ItemDrop : MonoBehaviour
 {
     [Header("Drop Rate")]
     [SerializeField]
-    private float dropChance = 0.85f;
+    private float dropChance = 0.90f;
 
     [Header("Common Items")]
     [SerializeField]
@@ -22,6 +22,9 @@ public class ItemDrop : MonoBehaviour
 
     [SerializeField]
     private GameObject bodyPillow;
+
+    [SerializeField]
+    private GameObject leurre;
 
     [Header("Drop Settings")]
     [SerializeField]
@@ -85,7 +88,7 @@ public class ItemDrop : MonoBehaviour
 
     private GameObject GetRandomItemWithMedikit()
     {
-        int randomWeight = Random.Range(0, 11);
+        int randomWeight = Random.Range(0, 13);
 
         if (randomWeight < 3)
         {
@@ -102,7 +105,12 @@ public class ItemDrop : MonoBehaviour
             return lubrifiant;
         }
 
-        if (randomWeight < 10)
+        if (randomWeight < 11)
+        {
+            return leurre;
+        }
+
+        if (randomWeight < 12)
         {
             return nuke;
         }
@@ -112,7 +120,7 @@ public class ItemDrop : MonoBehaviour
 
     private GameObject GetRandomItemWithoutMedikit()
     {
-        int randomWeight = Random.Range(0, 8);
+        int randomWeight = Random.Range(0, 10);
 
         if (randomWeight < 3)
         {
@@ -124,7 +132,12 @@ public class ItemDrop : MonoBehaviour
             return lubrifiant;
         }
 
-        if (randomWeight < 7)
+        if (randomWeight < 8)
+        {
+            return leurre;
+        }
+
+        if (randomWeight < 9)
         {
             return nuke;
         }

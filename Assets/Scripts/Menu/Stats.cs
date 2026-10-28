@@ -20,6 +20,7 @@ public class Stats : MonoBehaviour
                     + "Items récupérés : " + PlayerPrefs.GetInt("itemsCollected") + "\n"
                     + "Nukes utilisées : " + PlayerPrefs.GetInt("nukesUsed") + "\n"
                     + "Body Pillows utilisés : " + PlayerPrefs.GetInt("pillowsUsed") + "\n"
+                    + "Leurres utilisés : " + PlayerPrefs.GetInt("leurresUsed") + "\n"
                     + "Infections au Sida : " + PlayerPrefs.GetInt("sidaInfections") + "\n";
     }
 

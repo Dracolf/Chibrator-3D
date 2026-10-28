@@ -173,12 +173,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6e251edd41238a4faa76216fcfbc5be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemDrop
-  dropChance: 0.85
+  dropChance: 0.9
   viagra: {fileID: 6228651693166747614, guid: 7a6ee4603688359488de1d623680b044, type: 3}
   lubrifiant: {fileID: 6228651693166747614, guid: 46cab7ecef729564187a60e1103817d8, type: 3}
   medikit: {fileID: 6228651693166747614, guid: 06d01da3c12de724995987f2ceda0e1d, type: 3}
   nuke: {fileID: 6228651693166747614, guid: 12ff0efe8da2f1c408a4f821598402b6, type: 3}
   bodyPillow: {fileID: 6228651693166747614, guid: a780f6ee550ef2441a19c3e48d855afe, type: 3}
+  leurre: {fileID: 6228651693166747614, guid: 5d4d8938373cf514482492f5c63e2fca, type: 3}
   dropY: 1.44
   itemLifetime: 120
 --- !u!1 &1942080236476587622

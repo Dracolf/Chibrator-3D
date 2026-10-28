@@ -13,7 +13,7 @@ public class PlayerInputController : MonoBehaviour
     private GameObject capotePrefab;
 
     [SerializeField]
-    private GameObject pillowBarrierPrefab;
+    private GameObject pillowBarrierPrefab, leurrePrefab;
 
     [SerializeField]
     private string mouseSchemeName = "Keyboard&Mouse";
@@ -191,6 +191,9 @@ public class PlayerInputController : MonoBehaviour
         nextNukeAvailableTime = Time.unscaledTime + nukeCooldownDuration;
         int nbNukeUses = PlayerPrefs.GetInt("nukesUsed");
         PlayerPrefs.SetInt("nukesUsed", nbNukeUses + 1);
+        int newNukeAmount = PlayerPrefs.GetInt("nukeAmount") -1;
+        PlayerPrefs.SetInt("nukeAmount", newNukeAmount);
+        PlayerPrefs.Save();
 
         if (soundEffectPlayer != null)
         {
@@ -223,12 +226,55 @@ public class PlayerInputController : MonoBehaviour
         inventory.RemoveItemFromInventory("BodyPillow");
         int nbPillowUses = PlayerPrefs.GetInt("pillowsUsed");
         PlayerPrefs.SetInt("pillowsUsed", nbPillowUses + 1);
+        int newPillowAmount = PlayerPrefs.GetInt("pillowAmount") -1;
+        PlayerPrefs.SetInt("pillowAmount", newPillowAmount);
+        PlayerPrefs.Save();
 
         Instantiate(pillowBarrierPrefab, transform.position, transform.rotation);
 
         if (soundEffectPlayer != null)
         {
             soundEffectPlayer.PlaySound(SoundEffectType.Yamete);
+        }
+    }
+
+    private void OnLeurre(InputValue inputValue)
+    {
+        if (IsGamePaused())
+        {
+            return;
+        }
+
+        if (!inputValue.isPressed)
+        {
+            return;
+        }
+
+        if (inventory == null || !inventory.HasItem("Leurre"))
+        {
+            return;
+        }
+
+        inventory.RemoveItemFromInventory("Leurre");
+
+        int nbLeurreUses = PlayerPrefs.GetInt("leurresUsed");
+        PlayerPrefs.SetInt("leurresUsed", nbLeurreUses + 1);
+        int newLeurreAmount = PlayerPrefs.GetInt("leurreAmount") -1;
+        PlayerPrefs.SetInt("leurreAmount", newLeurreAmount);
+        PlayerPrefs.Save();
+
+        Vector3 spawnPosition = transform.position + transform.forward;
+        spawnPosition.y = 0.4f;
+
+        Instantiate(
+            leurrePrefab,
+            spawnPosition,
+            transform.rotation
+        );
+
+        if (soundEffectPlayer != null)
+        {
+            soundEffectPlayer.PlaySound(SoundEffectType.Bunshin);
         }
     }
 

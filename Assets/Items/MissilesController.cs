@@ -23,6 +23,7 @@ public class MissilesController : MonoBehaviour
             ZiziController[] zizis = FindObjectsByType<ZiziController>(FindObjectsSortMode.None);
             BossController[] bosses = FindObjectsByType<BossController>(FindObjectsSortMode.None);
             TerroristeController[] terroristes = FindObjectsByType<TerroristeController>(FindObjectsSortMode.None);
+            RastaController[] rastas = FindObjectsByType<RastaController>(FindObjectsSortMode.None);
 
             foreach (ZiziController zizi in zizis)
             {
@@ -37,6 +38,11 @@ public class MissilesController : MonoBehaviour
             foreach (TerroristeController terroriste in terroristes)
             {
                 terroriste.TakeDamage(100f);
+            }
+
+            foreach (RastaController rasta in rastas)
+            {
+                rasta.TakeDamage(100f);
             }
             SoundEffectPlayer soundEffectPlayer = FindAnyObjectByType<SoundEffectPlayer>();
             soundEffectPlayer.PlaySound(SoundEffectType.Boom);

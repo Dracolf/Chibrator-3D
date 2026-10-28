@@ -254,6 +254,7 @@ public class PlayerController : MonoBehaviour
 
         PlayerPrefs.SetInt("nukeAmount", 0);
         PlayerPrefs.SetInt("pillowAmount", 0);
+        PlayerPrefs.SetInt("leurreAmount", 0);
         PlayerPrefs.SetInt("gamesPlayed", nbGames + 1);
         PlayerPrefs.SetInt("totalScore", totalScore + finalScore);
 

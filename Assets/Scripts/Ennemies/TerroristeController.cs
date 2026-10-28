@@ -18,12 +18,7 @@ public class TerroristeController : MonoBehaviour
 
     private void Start()
     {
-        PlayerController player = FindAnyObjectByType<PlayerController>();
-
-        if (player != null)
-        {
-            target = player.transform;
-        }
+        RefreshTarget();
 
         infos = GetComponentInChildren<ZiziInfosDisplay>();
 
@@ -73,6 +68,7 @@ public class TerroristeController : MonoBehaviour
 
         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
         BodyPillowController bodyPillow = collision.gameObject.GetComponent<BodyPillowController>();
+        LeurreController leurre = collision.gameObject.GetComponent<LeurreController>();
 
         if (player != null)
         {
@@ -89,6 +85,15 @@ public class TerroristeController : MonoBehaviour
             Explode();
 
             bodyPillow.TakeDamage(100f);
+
+            Destroy(gameObject);
+        }
+
+        if (leurre != null)
+        {
+            Explode();
+
+            leurre.TakeDamage(100f);
 
             Destroy(gameObject);
         }
@@ -170,5 +175,10 @@ public class TerroristeController : MonoBehaviour
 
             Destroy(gameObject);
         }
+    }
+
+    public void RefreshTarget()
+    {
+        target = LeurreController.GetCurrentTarget();
     }
 }

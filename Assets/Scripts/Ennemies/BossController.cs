@@ -16,11 +16,7 @@ public class BossController : MonoBehaviour
 
     private void Start()
     {
-        PlayerController player = FindAnyObjectByType<PlayerController>();
-        if (player != null)
-        {
-            target = player.transform;
-        }
+        RefreshTarget();
 
         infos = GetComponentInChildren<ZiziInfosDisplay>();
         if (infos != null)
@@ -60,12 +56,17 @@ public class BossController : MonoBehaviour
     {
         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
         BodyPillowController bodyPillow = collision.gameObject.GetComponent<BodyPillowController>();
+        LeurreController leurre = collision.gameObject.GetComponent<LeurreController>();
 
         if (player != null)
         {
             player.ChangeHealth(-2);
         }
         if (bodyPillow != null)
+        {
+            bodyPillow.TakeDamage(2f);
+        }
+        if (leurre != null)
         {
             bodyPillow.TakeDamage(2f);
         }
@@ -113,5 +114,10 @@ public class BossController : MonoBehaviour
             soundEffectPlayer.PlaySound(SoundEffectType.BossDeath);
             Destroy(gameObject);
         }
+    }
+
+    public void RefreshTarget()
+    {
+        target = LeurreController.GetCurrentTarget();
     }
 }

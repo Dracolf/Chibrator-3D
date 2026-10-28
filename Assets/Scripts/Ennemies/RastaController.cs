@@ -18,12 +18,8 @@ public class RastaController : MonoBehaviour
 
     private void Start()
     {
-        PlayerController player = FindAnyObjectByType<PlayerController>();
         soundEffectPlayer = FindAnyObjectByType<SoundEffectPlayer>();
-        if (player != null)
-        {
-            target = player.transform;
-        }
+        RefreshTarget();
 
         speed = Random.Range(_avgSpeed - 1, _avgSpeed + 2);
 
@@ -70,6 +66,7 @@ public class RastaController : MonoBehaviour
     {
         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
         BodyPillowController bodyPillow = collision.gameObject.GetComponent<BodyPillowController>();
+        LeurreController leurre = collision.gameObject.GetComponent<LeurreController>();
 
         if (player != null)
         {
@@ -78,6 +75,10 @@ public class RastaController : MonoBehaviour
         if (bodyPillow != null)
         {
             bodyPillow.TakeDamage(1f);
+        }
+        if (leurre != null)
+        {
+            leurre.TakeDamage(1f);
         }
     }
 
@@ -138,5 +139,10 @@ public class RastaController : MonoBehaviour
             }
             Destroy(gameObject);
         }
+    }
+
+    public void RefreshTarget()
+    {
+        target = LeurreController.GetCurrentTarget();
     }
 }

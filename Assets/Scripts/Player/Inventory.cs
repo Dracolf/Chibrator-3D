@@ -10,6 +10,7 @@ public class Inventory : MonoBehaviour
     {
         inventory["Nuke"] = PlayerPrefs.GetInt("nukeAmount");
         inventory["BodyPillow"] = PlayerPrefs.GetInt("pillowAmount");
+        inventory["Leurre"] = PlayerPrefs.GetInt("leurreAmount");
     }
 
     public void AddItemToInventory(string item)

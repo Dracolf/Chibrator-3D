@@ -5,13 +5,13 @@ using TMPro;
 public class InventoryDisplay : MonoBehaviour
 {
     [SerializeField]
-    private Image inv1, inv2;
+    private Image inv1, inv2, inv3;
 
     [SerializeField]
-    private Sprite emptyInv, nukeInv, pillowInv;
+    private Sprite emptyInv, nukeInv, pillowInv, leurreInv;
 
     [SerializeField]
-    private TextMeshProUGUI count1, count2;
+    private TextMeshProUGUI count1, count2, count3;
 
     [SerializeField]
     private TextMeshProUGUI nukeCooldownText;
@@ -41,6 +41,7 @@ public class InventoryDisplay : MonoBehaviour
 
         UpdateNukeSlot();
         UpdateBodyPillowSlot();
+        UpdateLeurreSlot();
     }
 
     private void UpdateNukeSlot()
@@ -87,6 +88,21 @@ public class InventoryDisplay : MonoBehaviour
         {
             inv2.sprite = emptyInv;
             count2.gameObject.SetActive(false);
+        }
+    }
+
+    private void UpdateLeurreSlot()
+    {
+        if (inventory.HasItem("Leurre"))
+        {
+            inv3.sprite = leurreInv;
+            count3.gameObject.SetActive(true);
+            count3.text = inventory.GetItemCount("Leurre").ToString();
+        }
+        else
+        {
+            inv3.sprite = emptyInv;
+            count3.gameObject.SetActive(false);
         }
     }
 }
