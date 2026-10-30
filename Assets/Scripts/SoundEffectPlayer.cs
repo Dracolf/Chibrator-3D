@@ -24,7 +24,8 @@ public enum SoundEffectType
     Error,
     OneLove,
     Bomboclaat,
-    Bunshin
+    Bunshin,
+    Yoooo
 }
 
 public class SoundEffectPlayer : MonoBehaviour

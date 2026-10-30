@@ -35,41 +35,53 @@ public class ItemDrop : MonoBehaviour
 
     private PlayerController playerController;
     private RastaSpawner rastaSpawner;
+    private ChinoisSpawner chinoisSpawner;
+    private Score score;
 
     private void Awake()
     {
         playerController = FindAnyObjectByType<PlayerController>();
         rastaSpawner = FindAnyObjectByType<RastaSpawner>();
+        chinoisSpawner = FindAnyObjectByType<ChinoisSpawner>();
+        score = FindAnyObjectByType<Score>();
     }
 
     public void TryDropBonus()
     {
-        if (Random.value > dropChance)
+        if (score.isScoringEnabled)
         {
-            rastaSpawner.SpawnRasta();
-            return;
+            if (Random.value > dropChance)
+            {
+                if(Random.Range(0,2) == 0)
+                {
+                    rastaSpawner.SpawnRasta();
+                    return; 
+                }
+                chinoisSpawner.SpawnChinois();
+                return;
+            }
+
+            GameObject itemToDrop = GetRandomItemToDrop();
+
+            if (itemToDrop == null)
+            {
+                return;
+            }
+
+            Vector3 dropPosition = new Vector3(
+                transform.position.x,
+                dropY,
+                transform.position.z
+            );
+
+            GameObject droppedItem = Instantiate(
+                itemToDrop,
+                dropPosition,
+                Quaternion.identity
+            );
+
+            Destroy(droppedItem, itemLifetime);
         }
-
-        GameObject itemToDrop = GetRandomItemToDrop();
-
-        if (itemToDrop == null)
-        {
-            return;
-        }
-
-        Vector3 dropPosition = new Vector3(
-            transform.position.x,
-            dropY,
-            transform.position.z
-        );
-
-        GameObject droppedItem = Instantiate(
-            itemToDrop,
-            dropPosition,
-            Quaternion.identity
-        );
-
-        Destroy(droppedItem, itemLifetime);
     }
 
     private GameObject GetRandomItemToDrop()

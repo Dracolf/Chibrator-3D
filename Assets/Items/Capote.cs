@@ -31,6 +31,7 @@ public class Capote : MonoBehaviour
         BossController boss = other.GetComponent<BossController>();
         TerroristeController terroriste = other.GetComponent<TerroristeController>();
         RastaController rasta = other.GetComponent<RastaController>();
+        ChinoisController chinois = other.GetComponent<ChinoisController>();
 
         if (zizi != null)
         {
@@ -53,6 +54,12 @@ public class Capote : MonoBehaviour
         if (rasta != null)
         {
             rasta.TakeDamage(damages);
+            Destroy(gameObject);
+        }
+
+        if (chinois != null)
+        {
+            chinois.TakeDamage(damages);
             Destroy(gameObject);
         }
     }

@@ -2125,7 +2125,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 150}
-  m_SizeDelta: {x: 1000, y: 50}
+  m_SizeDelta: {x: 1100, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &433105694
 MonoBehaviour:
@@ -2147,9 +2147,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Bienvenue \xE0 toi, pourfendeur de paffs !\nComme c'est la premi\xE8re
-    fois que tu joues \xE0 ce jeu,\ntu dois indiquer ton pseudo pour enregistrer
-    ton record dans le leaderboard :"
+  m_text: "Bienvenue \xE0 toi, pourfendeur de paffs !\nComme c'est ta premi\xE8re
+    fois, tu dois indiquer ton pseudo pour enregistrer ton record dans le leaderboard
+    :"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3604,9 +3604,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Rastas tu\xE9s : 0\nItems r\xE9cup\xE9r\xE9s : 0\nNukes utilis\xE9es :
-    0\nBody Pillows utilis\xE9s : 0\nLeurres utilis\xE9s : 0\nInfections au Sida
-    : 0"
+  m_text: "Rastas tu\xE9s : 0\nChinois tu\xE9s : 0\nItems r\xE9cup\xE9r\xE9s : 0\nNukes
+    utilis\xE9es : 0\nBody Pillows utilis\xE9s : 0\nLeurres utilis\xE9s : 0\nInfections
+    au Sida : 0"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8736,7 +8736,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Version 1.5.0
+  m_text: Version 1.6.0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

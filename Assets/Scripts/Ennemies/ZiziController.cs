@@ -105,12 +105,12 @@ public class ZiziController : MonoBehaviour
                 }
             }
 
-            if (score.score % 400 == 0)
+            if (score.score % 400 == 0 && score.isScoringEnabled)
             {
                 terroristeSpawner.SpawnTerroriste();
             }
 
-            if (score.score % 1000 == 0)
+            if (score.score % 1000 == 0 && score.isScoringEnabled)
             {
                 bossSpawner.SpawnBoss();
             }

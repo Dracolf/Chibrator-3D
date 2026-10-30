@@ -160,12 +160,12 @@ public class TerroristeController : MonoBehaviour
                     itemDrop.TryDropBonus();
                 }
 
-                if (score.score % 400 == 0 && terroristeSpawner != null)
+                if (score.score % 400 == 0 && terroristeSpawner != null && score.isScoringEnabled)
                 {
                     terroristeSpawner.SpawnTerroriste();
                 }
 
-                if (score.score % 1000 == 0 && bossSpawner != null)
+                if (score.score % 1000 == 0 && bossSpawner != null && score.isScoringEnabled)
                 {
                     bossSpawner.SpawnBoss();
                 }

@@ -13,5 +13,7 @@ public class AudioSourceManager : MonoBehaviour
         {
             audioSource.Play();
         }
+
+        AudioListener.volume = PlayerPrefs.GetFloat("GlobalVolume");
     }
 }
