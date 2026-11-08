@@ -59,6 +59,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float hitSoundStopDelay = 0.2f;
 
+    [Header("Skin")]
+    [SerializeField]
+    private SkinnedMeshRenderer[] characterMeshes;
+
+    [SerializeField]
+    private Material baseMaterial, stoneMaterial, goldMaterial;
+
     private float lastDamageTime;
 
     private bool isDead;
@@ -80,6 +87,9 @@ public class PlayerController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        string skin = PlayerPrefs.GetString("CurrentSkin");
+        ApplyTheRightSkin(skin);
     }
 
     private void Update()
@@ -245,7 +255,19 @@ public class PlayerController : MonoBehaviour
         PlayerPrefs.SetInt("money", currentMoney + finalScore);
         PlayerPrefs.SetInt("totalPlayTimeSeconds", totalPlayTimeSeconds + currentGameSeconds);
 
-        bool isNewHighScore = finalScore > PlayerPrefs.GetInt("HighScore", 0);
+        int highScore = PlayerPrefs.GetInt("HighScore", 0);
+
+        if (highScore < 5000 && finalScore >= 5000)
+        {
+            NotificationManager.notification = "StoneSkinUnlocked";
+        }
+
+        if (highScore < 10000 && finalScore >= 10000)
+        {
+            NotificationManager.notification = "GoldSkinUnlocked";
+        }
+
+        bool isNewHighScore = finalScore > highScore;
 
         if (isNewHighScore)
         {
@@ -364,6 +386,39 @@ public class PlayerController : MonoBehaviour
         if (hitAudioSource != null && hitAudioSource.isPlaying)
         {
             hitAudioSource.Stop();
+        }
+    }
+
+    public void ApplyTheRightSkin(string skin)
+    {
+        if (skin == "Base")
+        {
+            foreach (SkinnedMeshRenderer mesh in characterMeshes)
+            {
+                mesh.sharedMaterial = baseMaterial;
+                PlayerPrefs.SetString("CurrentSkin", "Base");
+                PlayerPrefs.Save();
+            }
+        }
+
+        if (skin == "Stone")
+        {
+           foreach (SkinnedMeshRenderer mesh in characterMeshes)
+            {
+                mesh.sharedMaterial = stoneMaterial;
+                PlayerPrefs.SetString("CurrentSkin", "Stone");
+                PlayerPrefs.Save();
+            } 
+        }
+
+        if (skin == "Gold")
+        {
+           foreach (SkinnedMeshRenderer mesh in characterMeshes)
+            {
+                mesh.sharedMaterial = goldMaterial;
+                PlayerPrefs.SetString("CurrentSkin", "Gold");
+                PlayerPrefs.Save();
+            } 
         }
     }
 }

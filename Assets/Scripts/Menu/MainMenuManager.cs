@@ -14,19 +14,25 @@ public class MainMenuManager : MonoBehaviour
     private TextMeshProUGUI highScore;
 
     [SerializeField]
-    private Button start, quit, shop, credits, settings, leaderboard, stats;
+    private Button start, quit, shop, credits, settings, leaderboard, stats, customisation;
 
     [SerializeField]
-    private Button shopBackButton, creditsBackButton, settingsBackButton, leaderboardBackButton, statsBackButton;
+    private Button shopBackButton, creditsBackButton, settingsBackButton, leaderboardBackButton, statsBackButton, customisationBackButton, notificationClose;
 
     [SerializeField]
     private TextMeshProUGUI copyright, version, notEnough;
 
     [SerializeField]
-    private Image logo, creditsSheet, shopMenu, settingsMenu, leaderboardSheet, statsSheet;
+    private Image logo, creditsSheet, shopMenu, settingsMenu, leaderboardSheet, statsSheet, customisationMenu;
 
     [SerializeField]
-    private GameObject chibrator;
+    private GameObject chibrator, notification;
+
+    [SerializeField]
+    private SkinnedMeshRenderer[] characterMeshes;
+
+    [SerializeField]
+    private Material baseMaterial, stoneMaterial, goldMaterial;
 
     [SerializeField]
     private SoundEffectPlayer soundEffectPlayer;
@@ -56,6 +62,9 @@ public class MainMenuManager : MonoBehaviour
             audioSource.Stop();
         }
 
+        string skin = PlayerPrefs.GetString("CurrentSkin");
+        ApplyTheRightSkin(skin);
+
         PlayerPrefs.Save();
 
         lastScore.text = "Last score : " + PlayerPrefs.GetInt("LastScore");
@@ -63,6 +72,20 @@ public class MainMenuManager : MonoBehaviour
         AudioListener.volume = PlayerPrefs.GetFloat("GlobalVolume");
 
         BackToMainMenu();
+
+        if (NotificationManager.notification == "StoneSkinUnlocked")
+        {
+            notification.GetComponent<Notification>().SetSkin("stone");
+            ShowNotification();
+            soundEffectPlayer.PlaySound(SoundEffectType.Notification);
+        }
+
+        if (NotificationManager.notification == "GoldSkinUnlocked")
+        {
+            notification.GetComponent<Notification>().SetSkin("gold");
+            ShowNotification();
+            soundEffectPlayer.PlaySound(SoundEffectType.Notification);
+        }
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -106,11 +129,14 @@ public class MainMenuManager : MonoBehaviour
         settings.gameObject.SetActive(false);
         leaderboard.gameObject.SetActive(false);
         stats.gameObject.SetActive(false);
+        customisation.gameObject.SetActive(false);
         creditsSheet.gameObject.SetActive(true);
         shopMenu.gameObject.SetActive(false);
         settingsMenu.gameObject.SetActive(false);
         leaderboardSheet.gameObject.SetActive(false);
         statsSheet.gameObject.SetActive(false);
+        customisationMenu.gameObject.SetActive(false);
+        notification.SetActive(false);
 
         SelectButton(creditsBackButton);
         soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
@@ -131,11 +157,14 @@ public class MainMenuManager : MonoBehaviour
         settings.gameObject.SetActive(false);
         leaderboard.gameObject.SetActive(false);
         stats.gameObject.SetActive(false);
+        customisation.gameObject.SetActive(false);
         creditsSheet.gameObject.SetActive(false);
         shopMenu.gameObject.SetActive(true);
         settingsMenu.gameObject.SetActive(false);
         leaderboardSheet.gameObject.SetActive(false);
         statsSheet.gameObject.SetActive(false);
+        customisationMenu.gameObject.SetActive(false);
+        notification.SetActive(false);
 
         SelectButton(shopBackButton);
         soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
@@ -156,11 +185,14 @@ public class MainMenuManager : MonoBehaviour
         settings.gameObject.SetActive(false);
         leaderboard.gameObject.SetActive(false);
         stats.gameObject.SetActive(false);
+        customisation.gameObject.SetActive(false);
         creditsSheet.gameObject.SetActive(false);
         shopMenu.gameObject.SetActive(false);
         settingsMenu.gameObject.SetActive(true);
         leaderboardSheet.gameObject.SetActive(false);
         statsSheet.gameObject.SetActive(false);
+        customisationMenu.gameObject.SetActive(false);
+        notification.SetActive(false);
 
         SelectButton(settingsBackButton);
         soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
@@ -181,11 +213,14 @@ public class MainMenuManager : MonoBehaviour
         settings.gameObject.SetActive(false);
         leaderboard.gameObject.SetActive(false);
         stats.gameObject.SetActive(false);
+        customisation.gameObject.SetActive(false);
         creditsSheet.gameObject.SetActive(false);
         shopMenu.gameObject.SetActive(false);
         settingsMenu.gameObject.SetActive(false);
         leaderboardSheet.gameObject.SetActive(true);
         statsSheet.gameObject.SetActive(false);
+        customisationMenu.gameObject.SetActive(false);
+        notification.SetActive(false);
 
         SelectButton(leaderboardBackButton);
         soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
@@ -206,16 +241,72 @@ public class MainMenuManager : MonoBehaviour
         settings.gameObject.SetActive(false);
         leaderboard.gameObject.SetActive(false);
         stats.gameObject.SetActive(false);
+        customisation.gameObject.SetActive(false);
         creditsSheet.gameObject.SetActive(false);
         shopMenu.gameObject.SetActive(false);
         settingsMenu.gameObject.SetActive(false);
-        leaderboardSheet.gameObject.SetActive(true);
+        leaderboardSheet.gameObject.SetActive(false);
         statsSheet.gameObject.SetActive(true);
+        customisationMenu.gameObject.SetActive(false);
+        notification.SetActive(false);
 
         SelectButton(statsBackButton);
         soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
     }
 
+    public void Customisation()
+    {
+        lastScore.gameObject.SetActive(false);
+        highScore.gameObject.SetActive(false);
+        copyright.gameObject.SetActive(false);
+        version.gameObject.SetActive(false);
+        chibrator.SetActive(true);
+        logo.gameObject.SetActive(false);
+        start.gameObject.SetActive(false);
+        quit.gameObject.SetActive(false);
+        shop.gameObject.SetActive(false);
+        credits.gameObject.SetActive(false);
+        settings.gameObject.SetActive(false);
+        leaderboard.gameObject.SetActive(false);
+        stats.gameObject.SetActive(false);
+        customisation.gameObject.SetActive(false);
+        creditsSheet.gameObject.SetActive(false);
+        shopMenu.gameObject.SetActive(false);
+        settingsMenu.gameObject.SetActive(false);
+        leaderboardSheet.gameObject.SetActive(false);
+        statsSheet.gameObject.SetActive(false);
+        customisationMenu.gameObject.SetActive(true);
+        notification.SetActive(false);
+
+        SelectButton(customisationBackButton);
+        soundEffectPlayer.PlaySound(SoundEffectType.SoftProut);
+    }
+
+    public void ShowNotification(){
+        lastScore.gameObject.SetActive(false);
+        highScore.gameObject.SetActive(false);
+        copyright.gameObject.SetActive(false);
+        version.gameObject.SetActive(false);
+        chibrator.SetActive(false);
+        logo.gameObject.SetActive(false);
+        start.gameObject.SetActive(false);
+        quit.gameObject.SetActive(false);
+        shop.gameObject.SetActive(false);
+        credits.gameObject.SetActive(false);
+        settings.gameObject.SetActive(false);
+        leaderboard.gameObject.SetActive(false);
+        stats.gameObject.SetActive(false);
+        customisation.gameObject.SetActive(false);
+        creditsSheet.gameObject.SetActive(false);
+        shopMenu.gameObject.SetActive(false);
+        settingsMenu.gameObject.SetActive(false);
+        leaderboardSheet.gameObject.SetActive(false);
+        statsSheet.gameObject.SetActive(false);
+        customisationMenu.gameObject.SetActive(false);        
+        notification.SetActive(true);
+
+        SelectButton(notificationClose);
+    }
     public void BackToMainMenu()
     {
         lastScore.gameObject.SetActive(true);
@@ -231,14 +322,50 @@ public class MainMenuManager : MonoBehaviour
         settings.gameObject.SetActive(true);
         leaderboard.gameObject.SetActive(true);
         stats.gameObject.SetActive(true);
+        customisation.gameObject.SetActive(true);
         creditsSheet.gameObject.SetActive(false);
         shopMenu.gameObject.SetActive(false);
         notEnough.gameObject.SetActive(false);
         settingsMenu.gameObject.SetActive(false);
         leaderboardSheet.gameObject.SetActive(false);
         statsSheet.gameObject.SetActive(false);
+        customisationMenu.gameObject.SetActive(false);
+        notification.SetActive(false);
 
         SelectButton(start);
+    }
+
+    public void ApplyTheRightSkin(string skin)
+    {
+        if (skin == "Base")
+        {
+            foreach (SkinnedMeshRenderer mesh in characterMeshes)
+            {
+                mesh.sharedMaterial = baseMaterial;
+                PlayerPrefs.SetString("CurrentSkin", "Base");
+                PlayerPrefs.Save();
+            }
+        }
+
+        if (skin == "Stone")
+        {
+           foreach (SkinnedMeshRenderer mesh in characterMeshes)
+            {
+                mesh.sharedMaterial = stoneMaterial;
+                PlayerPrefs.SetString("CurrentSkin", "Stone");
+                PlayerPrefs.Save();
+            } 
+        }
+
+        if (skin == "Gold")
+        {
+           foreach (SkinnedMeshRenderer mesh in characterMeshes)
+            {
+                mesh.sharedMaterial = goldMaterial;
+                PlayerPrefs.SetString("CurrentSkin", "Gold");
+                PlayerPrefs.Save();
+            } 
+        }
     }
 
     public void QuitGame()

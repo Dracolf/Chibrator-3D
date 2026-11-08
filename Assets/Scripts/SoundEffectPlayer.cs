@@ -25,7 +25,8 @@ public enum SoundEffectType
     OneLove,
     Bomboclaat,
     Bunshin,
-    Yoooo
+    Yoooo,
+    Notification
 }
 
 public class SoundEffectPlayer : MonoBehaviour
